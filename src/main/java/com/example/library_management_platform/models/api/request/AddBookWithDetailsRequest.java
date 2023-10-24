@@ -1,0 +1,14 @@
+package com.example.library_management_platform.models.api.request;
+
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class AddBookWithDetailsRequest {
+    private String name;
+    private List<Long> genreIds;
+    private List<Long> authorIds;
+    private Long publisherId;
+    private String cover;
+}
