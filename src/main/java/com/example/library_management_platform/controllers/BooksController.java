@@ -24,7 +24,7 @@ public class BooksController {
             @RequestParam(required = false) Long genreId,
             @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) Long publisherId
-            ){};
+            ){ return new GetAllBooksResponse();};
 
     /**
      * getBookDetailById :- returns book details based on book id.
@@ -32,7 +32,9 @@ public class BooksController {
      * @return GetBookDetailsResponse (contains details of book associated with value of bookId param from book table)
      */
     @GetMapping("/{bookId}")
-    public GetBookDetailsResponse getBookDetailById(@PathVariable Long bookId){};
+    public GetBookDetailsResponse getBookDetailById(@PathVariable Long bookId){
+        return new GetBookDetailsResponse();
+    };
 
 
     /**
@@ -41,7 +43,9 @@ public class BooksController {
      * @return BaseResponse (base response)
      */
     @PostMapping("/add")
-    public BaseResponse addBookWithDetails(@RequestBody AddBookWithDetailsRequest body){};
+    public BaseResponse addBookWithDetails(@RequestBody AddBookWithDetailsRequest body){
+        return new BaseResponse();
+    };
 
 
     /**
@@ -50,6 +54,8 @@ public class BooksController {
      * @return BaseResponse (base response)
      */
     @DeleteMapping("/remove/{bookId}")
-    public BaseResponse removeBookById(@PathVariable Long bookId){};
+    public BaseResponse removeBookById(@PathVariable Long bookId){
+        return new BaseResponse();
+    };
 
 }

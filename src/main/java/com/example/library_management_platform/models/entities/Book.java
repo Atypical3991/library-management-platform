@@ -1,21 +1,43 @@
 package com.example.library_management_platform.models.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
-public class Book {
-    private long id;
+@Entity
+@Table(name="book")
+public class Book  extends BaseEntity{
+
+    @Column(name = "name")
     private String name;
-    private String slugName;
+
+    @Column(name = "author_ids")
     private List<Long> authorIds;
-    private List<Long> genreIds;
-    private Date addedAt;
-    private Date updatedAt;
-    private String status;
-    private Long publisherId;
-    private String cover;
+
+    @Column(name="genre_ids")
+    private List<Long> genre_ids;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="status")
+    private StatusEnum status;
+
+    @JoinColumn(name = "publisher_id")
+    private Long publisher_id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="cover")
+    private CoverEnum cover;
+
+
+    public enum StatusEnum{
+        ACTIVE,
+        IN_ACTIVE
+    }
+
+    public enum CoverEnum{
+        PAPERBACK,
+        HARDCOVER
+    }
 }

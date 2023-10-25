@@ -16,7 +16,9 @@ public class IssuanceController {
      * @return BaseResponse (base response)
      */
     @PostMapping("/")
-    public BaseResponse issueBook(@RequestBody IssueBookRequest body){};
+    public BaseResponse issueBook(@RequestBody IssueBookRequest body){
+        return new BaseResponse();
+    };
 
     /**
      * removeIssuance:- to remove an active issuance.
@@ -24,7 +26,9 @@ public class IssuanceController {
      * @return BaseResponse (base response)
      */
     @DeleteMapping("/{issueId}/remove")
-    public BaseResponse removeIssuance(@PathVariable Long issueId){};
+    public BaseResponse removeIssuance(@PathVariable Long issueId){
+        return new BaseResponse();
+    };
 
     /**
      * modifyIssuance:- to modify an active issuance.
@@ -32,5 +36,7 @@ public class IssuanceController {
      * @return BaseResponse (base response)
      */
     @PutMapping("/{issueId}/modify")
-    public BaseResponse modifyIssuance(@PathVariable Long issueId){};
+    public BaseResponse modifyIssuance(@PathVariable Long issueId){
+        return new BaseResponse();
+    };
 }

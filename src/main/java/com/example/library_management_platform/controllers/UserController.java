@@ -16,7 +16,9 @@ public class UserController {
      * @return BaseResponse (base response)
      */
     @PostMapping("/register")
-    public BaseResponse addUser(@RequestBody AddUserRequest body){};
+    public BaseResponse addUser(@RequestBody AddUserRequest body){
+        return new BaseResponse();
+    };
 
     /**
      * removeUser :- to remove a user.
@@ -24,7 +26,9 @@ public class UserController {
      * @return BaseResponse (base response)
      */
     @DeleteMapping("/{userId}/remove")
-    public BaseResponse removeUser(@PathVariable Long userId){};
+    public BaseResponse removeUser(@PathVariable Long userId){
+        return new BaseResponse();
+    };
 
     /**
      * getUserProfile :- to get user profile details.
@@ -33,7 +37,9 @@ public class UserController {
      */
 
     @GetMapping("/{userId}/profile")
-    public GetUserProfileResponse getUserProfile(@PathVariable Long userId){};
+    public GetUserProfileResponse getUserProfile(@PathVariable Long userId){
+        return new GetUserProfileResponse();
+    };
 
     /**
      * modifyUserProfile :- to modify user profile
@@ -41,6 +47,8 @@ public class UserController {
      * @return BaseResponse (base response)
      */
     @PutMapping("/{userId}/modify")
-    public BaseResponse modifyUserProfile(@PathVariable Long userId){};
+    public BaseResponse modifyUserProfile(@PathVariable Long userId){
+        return new BaseResponse();
+    };
 
 }
