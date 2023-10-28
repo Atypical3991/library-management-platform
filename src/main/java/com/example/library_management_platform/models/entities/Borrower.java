@@ -7,7 +7,9 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="borrower")
+ @Table(name = "borrower", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "contact_email"),@UniqueConstraint(columnNames = "contact_number")
+})
 public class Borrower extends BaseEntity {
 
     @Column(name="username")
@@ -28,20 +30,15 @@ public class Borrower extends BaseEntity {
     @Column(name="last_name")
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="gender")
-    private String gender;
+    private GenderEnum gender;
 
     @Column(name="dob")
     private String dob;
 
-    @Column(name="active_issuance_ids")
-    private List<Long> activeIssuanceIds;
-
-    @Column(name="in_active_issuance_ids")
-    private List<Long> inActiveIssuanceIds;
-
-    @Column(name="role")
-    private String role;
+    @Column(name="issuance_ids")
+    private List<Long> issuanceIds;
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")
@@ -54,5 +51,10 @@ public class Borrower extends BaseEntity {
     public enum StatusEnum{
         ACTIVE,
         IN_ACTIVE
+    }
+
+    public enum GenderEnum{
+        MALE,
+        FEMALE
     }
 }

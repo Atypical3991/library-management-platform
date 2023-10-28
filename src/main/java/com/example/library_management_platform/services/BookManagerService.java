@@ -1,6 +1,6 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.BookToConvertorBookDetails;
+import com.example.library_management_platform.convertors.BookEntityModelToBookDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
 import com.example.library_management_platform.models.api.response.GetAllBooksResponse;
 import com.example.library_management_platform.models.entities.Book;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -29,18 +28,18 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
     BookGenreRepository  bookGenreRepository;
 
     @Autowired
-    BookToConvertorBookDetails bookToConvertorBookDetails;
+    BookEntityModelToBookDetailsConvertor bookEntityModelToBookDetailsConvertor;
 
 
     @Override
-    public List<GetAllBooksResponse.GetAllBooksData.BookDetails> getAllItems(Object itemSearchModel) {
+    public List<GetAllBooksResponse.GetAllBooksData.BookDetails> getAllItems(Object searchRequestModel) {
         return null;
     }
 
     @Override
     public List<GetAllBooksResponse.GetAllBooksData.BookDetails> getAllItemsWithoutSearchCriteria() {
         List<Book> bookList = bookRepository.findAll();
-        return bookList.stream().map(book -> bookToConvertorBookDetails.convert(book)).toList();
+        return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
     }
 
     @Override

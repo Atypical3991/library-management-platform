@@ -50,7 +50,7 @@ public class BookGenreController {
             return new GetAllBookGenresResponse(true,null,"Genres fetched successfully.", new GetAllBookGenresResponse.DataObj(genresObjList));
         }catch (Exception e){
             log.error("GenreController, getAllGenres exception raised!!",e);
-            return new BaseResponse(false,"something went wrong",null);
+            return new GetAllBookGenresResponse(false,"Oops!! something went wrong",null,null);
         }
     }
 
@@ -61,7 +61,7 @@ public class BookGenreController {
             return new GetBookGenreById(true,null,"Genre Details fetched successfully.", new GetBookGenreById.DataObj(genreDetails));
         }catch (Exception e){
             log.error("GenreController, getGenreByID exception raised!!",e);
-            return new BaseResponse(false,"something went wrong",null);
+            return new GetBookGenreById(false,"Oops!! something went wrong",null,null);
         }
     }
 

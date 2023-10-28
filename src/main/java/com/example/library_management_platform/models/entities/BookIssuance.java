@@ -8,13 +8,13 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="issuance")
-public class Issuance extends BaseEntity {
+@Table(name="book_issuance")
+public class BookIssuance extends BaseEntity {
 
-    @Column(name="user_id")
+    @Column(name="borrower_id")
     private Long userId;
 
-    @Column(name="expire_at")
+    @Column(name="expired_at")
     private Date expiredAt;
 
     @Column(name = "book_id")

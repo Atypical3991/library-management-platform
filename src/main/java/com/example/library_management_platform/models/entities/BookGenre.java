@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "genre", uniqueConstraints = {
+@Table(name = "book_genre", uniqueConstraints = {
         @UniqueConstraint(columnNames = "slug")
 })
 public class BookGenre extends BaseEntity {

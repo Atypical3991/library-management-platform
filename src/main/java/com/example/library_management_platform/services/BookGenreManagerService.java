@@ -1,7 +1,7 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.AddBookGenreRequestToBookGenreModelConvertor;
-import com.example.library_management_platform.convertors.BookGenreToBookGenreDetailsConvertor;
+import com.example.library_management_platform.convertors.AddBookGenreRequestToBookGenreEntityModelConvertor;
+import com.example.library_management_platform.convertors.BookGenreEntityModelToBookGenreDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBookGenre;
 import com.example.library_management_platform.models.api.request.UpdateBookGenreRequestModel;
 import com.example.library_management_platform.models.api.response.GetAllBookGenresResponse;
@@ -23,10 +23,10 @@ import java.util.*;
 public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponse.GenreObj, GetBookGenreById.GenreDetails, UpdateBookGenreRequestModel,AddBookGenre,Object> {
 
     @Autowired
-    AddBookGenreRequestToBookGenreModelConvertor addBookGenreRequestToBookGenreModelConvertor;
+    AddBookGenreRequestToBookGenreEntityModelConvertor addBookGenreRequestToBookGenreEntityModelConvertor;
 
     @Autowired
-    BookGenreToBookGenreDetailsConvertor bookGenreToBookGenreDetailsConvertor;
+    BookGenreEntityModelToBookGenreDetailsConvertor bookGenreEntityModelToBookGenreDetailsConvertor;
 
     @Autowired
     BookGenreRepository bookGenreRepository;
@@ -58,12 +58,12 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
         if(genreObj.isEmpty()){
             throw  new RuntimeException("No genre found");
         }
-        return bookGenreToBookGenreDetailsConvertor.convert(genreObj.get());
+        return bookGenreEntityModelToBookGenreDetailsConvertor.convert(genreObj.get());
     }
 
     @Override
     public Boolean addItem(AddBookGenre itemModel) {
-        BookGenre bookGenre = addBookGenreRequestToBookGenreModelConvertor.convert(itemModel);
+        BookGenre bookGenre = addBookGenreRequestToBookGenreEntityModelConvertor.convert(itemModel);
         if(bookGenre ==  null){
             log.error("BookManagerService, addGenre null type genre can't be processed, payload: {}",itemModel);
             throw new RuntimeException("null type genre can't be processed.");

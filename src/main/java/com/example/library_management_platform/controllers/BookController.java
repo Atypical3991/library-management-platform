@@ -3,9 +3,10 @@ package com.example.library_management_platform.controllers;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
 import com.example.library_management_platform.models.api.response.BaseResponse;
 import com.example.library_management_platform.models.api.response.GetAllBooksResponse;
+import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.services.BookManagerService;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -44,7 +45,7 @@ public class BookController {
             return new GetAllBooksResponse(true, null, "Book added successfully",new GetAllBooksResponse.GetAllBooksData(bookDetailsList.size(),bookDetailsList) );
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!!", e);
-            return new BaseResponse(false, "Something went wrong.", null);
+            return new GetAllBooksResponse(false, "Something went wrong.", null,null);
         }
     }
 }

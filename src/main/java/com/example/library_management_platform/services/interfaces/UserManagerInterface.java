@@ -6,9 +6,11 @@ import com.example.library_management_platform.models.services.absract.UpdateUse
 
 import java.util.List;
 
-public interface UserManagerInterface<T> {
-    Boolean createUser(CreateUserModel user);
-    Boolean updateUser(UpdateUserModel user);
+public interface UserManagerInterface<T,K,L,M,N> {
+    Boolean createUser(K user);
+    Boolean updateUser(L user);
     Boolean removeUser(T t);
-    List<IssuanceItemsModel> getMyAllIssuanceItems(T t);
+    List<M> getMyAllIssuanceItems(T t);
+
+    N getUserById(T t);
 }
