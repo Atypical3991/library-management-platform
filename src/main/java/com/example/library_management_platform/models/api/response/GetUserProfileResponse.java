@@ -10,6 +10,11 @@ public class GetUserProfileResponse extends BaseResponse{
 
     private GetUserProfileData data;
 
+    public GetUserProfileResponse(Boolean success, String error, String message, GetUserProfileData data) {
+        super(success, error, message);
+        this.data = data;
+    }
+
     @Data
     public class GetUserProfileData{
         private Long id;

@@ -2,42 +2,52 @@ package com.example.library_management_platform.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name="book")
-public class Book  extends BaseEntity{
+@Table(name = "book", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "slug")
+})
+public class Book  extends BaseEntity {
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "author_ids")
-    private List<Long> authorIds;
+    @Column(name = "slug")
+    private String slug;
 
-    @Column(name="genre_ids")
-    private List<Long> genre_ids;
+    @Column(name = "author")
+    private String author;
+
+    @ManyToMany(mappedBy = "books", cascade = CascadeType.ALL)
+    private Set<BookGenre> bookGenres = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private StatusEnum status;
 
-    @JoinColumn(name = "publisher_id")
-    private Long publisher_id;
+    @Column(name = "publisher")
+    private String publisher;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="cover")
-    private CoverEnum cover;
-
-
-    public enum StatusEnum{
+    public enum StatusEnum {
         ACTIVE,
         IN_ACTIVE
     }
 
-    public enum CoverEnum{
-        PAPERBACK,
-        HARDCOVER
+    @Override
+    public String toString(){
+        return  "Book{" +
+                "id=" + this.getId() +
+                ", name='" + this.getName() + '\'' +
+                ",  genres=" + this.getBookGenres().stream().map(BookGenre::getName).toList() +
+                '}';
     }
+
 }
