@@ -1,42 +1,66 @@
 package com.example.library_management_platform.controllers;
 
-import com.example.library_management_platform.models.api.request.IssueBookRequest;
+import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceEntityModelConvertor;
+import com.example.library_management_platform.models.api.request.CreateBookIssuanceModel;
 import com.example.library_management_platform.models.api.response.BaseResponse;
+import com.example.library_management_platform.models.api.response.GetAllIssuanceResponse;
+import com.example.library_management_platform.models.entities.BookIssuance;
+import com.example.library_management_platform.repositories.BookIssuanceRepository;
+import com.example.library_management_platform.services.BookIssuanceManagerService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/book/issue")
+@RequestMapping("/api/issuance")
+@Slf4j
 public class BookIssuanceController {
 
-//
-//    /**
-//     * issueBook:- to create an issuance
-//     * @param body (contains details regarding a new issuance)
-//     * @return BaseResponse (base response)
-//     */
-//    @PostMapping("/")
-//    public BaseResponse issueBook(@RequestBody IssueBookRequest body){
-//        return new BaseResponse();
-//    };
 
-//    /**
-//     * removeIssuance:- to remove an active issuance.
-//     * @param issueId (id of issue table)
-//     * @return BaseResponse (base response)
-//     */
-//    @DeleteMapping("/{issueId}/remove")
-//    public BaseResponse removeIssuance(@PathVariable Long issueId){
-//        return new BaseResponse();
-//    };
+    @Autowired
+    BookIssuanceManagerService bookIssuanceManagerService;
 
-//    /**
-//     * modifyIssuance:- to modify an active issuance.
-//     * @param issueId (id of issue table)
-//     * @return BaseResponse (base response)
-//     */
-//    @PutMapping("/{issueId}/modify")
-//    public BaseResponse modifyIssuance(@PathVariable Long issueId){
-//        return new BaseResponse();
-//    };
+    @Autowired
+    BookIssuanceRepository bookIssuanceRepository;
+
+
+    @Autowired
+    CreateBookIssuanceModelToBookIssuanceEntityModelConvertor createBookIssuanceModelToBookIssuanceEntityModelConvertor;
+
+    @PostMapping("")
+    public BaseResponse issueBook(@RequestBody @Valid CreateBookIssuanceModel payload, BindingResult result){
+        if(result.hasErrors()){
+            List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+            return new BaseResponse(false, String.join(", ", errors), "");
+        }
+        try{
+            Boolean success = bookIssuanceManagerService.createIssuance(payload);
+            if(success){
+                return new BaseResponse(true, null, "Book issue created successfully");
+            }else{
+                return new BaseResponse(false, "something went wrong", null);
+
+            }
+        }catch (Exception e){
+            log.error("BookIssuanceController, issueBook exception raised!! payload: {}",payload,e);
+            return new BaseResponse(false, "something went wrong!!", null);
+        }
+    }
+
+
+    @GetMapping("/all")
+    public GetAllIssuanceResponse getAllIssuance(){
+        try{
+             return new GetAllIssuanceResponse(true, null, null, new GetAllIssuanceResponse.DataObj(bookIssuanceManagerService.getAllIssuance()));
+        }catch (Exception e){
+            log.error("BookIssuanceController, getAllIssuance exception raised!!",e);
+            return new GetAllIssuanceResponse(false, "something went wrong!!", null,null);
+        }
+    }
 }

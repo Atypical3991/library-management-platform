@@ -36,13 +36,13 @@ public class BorrowerDetailsResponse  extends BaseResponse{
         private List<Long> issuanceList;
 
 
-        public DataObj(String email, String number, String username, String firstName, String lastName, List<Long> issuanceList) {
+        public DataObj(String email, String number, String username, String firstName, String lastName) {
             this.email = email;
             this.number = number;
             this.username = username;
             this.firstName = firstName;
             this.lastName = lastName;
-            this.issuanceList = issuanceList;
+//            this.issuanceList = issuanceList;
         }
 
     }

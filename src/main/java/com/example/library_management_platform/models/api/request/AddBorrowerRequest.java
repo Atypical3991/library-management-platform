@@ -2,6 +2,7 @@ package com.example.library_management_platform.models.api.request;
 
 import com.example.library_management_platform.models.entities.Borrower;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -9,10 +10,12 @@ import lombok.Data;
 @Data
 public class AddBorrowerRequest {
 
+    @NotBlank(message = "username can't be empty")
     @Pattern(regexp = "^[a-zA-Z0-9_]{3,20}$", message = "Username should contains alphabets and number with spaces and underscores.\n Username length should be between 3 to 20.")
     @JsonProperty("username")
     private String userName;
 
+    @NotBlank(message = "password can't be empty")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",message = "Password should be: \n" +
             "At least one alphabet character (uppercase or lowercase).\n" +
             "At least one digit.\n" +
@@ -21,18 +24,22 @@ public class AddBorrowerRequest {
     @JsonProperty("password")
     private String password;
 
+    @NotBlank(message = "first name can't be empty")
     @Pattern(regexp = "^[a-zA-Z ]{3,20}$", message = "First name should contains alphabets and spaces with min length 3 and max length 20.")
     @JsonProperty("firstName")
     private String firstName;
 
+    @NotBlank(message = "last name can't be empty")
     @Pattern(regexp = "^[a-zA-Z ]{3,20}$", message = "Last name should contains alphabets and spaces with min length 3 and max length 20.")
     @JsonProperty("lastName")
     private String lastName;
 
-    @Pattern(regexp = "^\\d{10}$\n", message = "Contact number must be 10 digit long.")
+    @NotBlank(message = "contact number can't be empty")
+    @Pattern(regexp = "^\\d{10}$", message = "Contact number must be 10 digit long.")
     @JsonProperty("contactNumber")
     private String contactNumber;
 
+    @NotBlank(message = "email can't be empty")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Please pass a valid email id")
     @JsonProperty("contactEmail")
     private String contactEmail;
@@ -41,7 +48,8 @@ public class AddBorrowerRequest {
     @JsonProperty("gender")
     private Borrower.GenderEnum gender;
 
-    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}$",message = "Please DOB in DD/MM/YYYY format")
+    @NotBlank(message = "dob can't be empty")
+    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}$",message = "Please pass DOB in DD/MM/YYYY format")
     @JsonProperty("dob")
     private String dob;
 

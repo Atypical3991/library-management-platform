@@ -8,10 +8,13 @@ import com.example.library_management_platform.models.entities.Borrower;
 import com.example.library_management_platform.repositories.BorrowerRepository;
 import com.example.library_management_platform.services.interfaces.UserManagerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+
+@Service
 public class BorrowerManagerService implements UserManagerInterface<Long, AddBorrowerRequest, Object,Object, BorrowerDetailsResponse.DataObj> {
 
     @Autowired

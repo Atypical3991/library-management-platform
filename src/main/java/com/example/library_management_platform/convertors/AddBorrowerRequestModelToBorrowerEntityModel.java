@@ -19,6 +19,7 @@ public class AddBorrowerRequestModelToBorrowerEntityModel implements Converter<A
         borrower.setPassword(source.getPassword());
         borrower.setContactEmail(source.getContactEmail());
         borrower.setContactNumber(source.getContactNumber());
+        borrower.setUsername(source.getUserName());
         return borrower;
     }
 }

@@ -8,7 +8,9 @@ import java.util.List;
 @Data
 @Entity
  @Table(name = "borrower", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "contact_email"),@UniqueConstraint(columnNames = "contact_number")
+         @UniqueConstraint(columnNames = "contact_email"),
+         @UniqueConstraint(columnNames = "contact_number"),
+         @UniqueConstraint(columnNames = "username")
 })
 public class Borrower extends BaseEntity {
 
@@ -37,8 +39,9 @@ public class Borrower extends BaseEntity {
     @Column(name="dob")
     private String dob;
 
-    @Column(name="issuance_ids")
-    private List<Long> issuanceIds;
+    @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name="book_issuance_list")
+    private List<BookIssuance> bookIssuanceList;
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")
@@ -56,5 +59,14 @@ public class Borrower extends BaseEntity {
     public enum GenderEnum{
         MALE,
         FEMALE
+    }
+
+    @Override
+    public String toString(){
+        return  "Book{" +
+                "id=" + this.getId() +
+                ", contactEmail='" + this.getContactEmail() + '\'' +
+                ", username=" + this.getUsername() +
+                '}';
     }
 }
