@@ -6,6 +6,7 @@ import com.example.library_management_platform.models.api.response.BaseResponseM
 import com.example.library_management_platform.models.api.response.LoginResponseModelModel;
 import com.example.library_management_platform.services.BorrowerLoginLogoutService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/borrowers")
+@Slf4j
 public class BorrowerLoginLogoutController {
 
     @Autowired
@@ -25,14 +27,20 @@ public class BorrowerLoginLogoutController {
 
     @PostMapping("/login")
     public BaseResponseModel login(@RequestBody @Valid LoginRequestModel loginRequestModel, BindingResult result){
-        if(result.hasErrors()){
-            List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-            return new LoginResponseModelModel(false, String.join(", ", errors), "",null);
+        try{
+            if(result.hasErrors()){
+                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+                return new LoginResponseModelModel(false, String.join(", ", errors), "",null);
+            }
+            String token = borrowerLoginLogoutService.login(loginRequestModel);
+            if(token == null){
+                return new LoginResponseModelModel(false, "Oops!! token generation failed.", null,null);
+            }
+            return new LoginResponseModelModel(false, null, "Woo hoo!! your token generated successfully.", new LoginResponseModelModel.DataObj(token));
+
+        }catch ( Exception e){
+            log.error("BorrowerLoginLogoutController, login exception raised!! payload: {}",loginRequestModel,e);
+            return new LoginResponseModelModel(false, "Oops!! something went wrong.", null,null);
         }
-        String token = borrowerLoginLogoutService.login(loginRequestModel);
-        if(token == null){
-            return new LoginResponseModelModel(false, "something went wrong.", null,null);
-        }
-        return new LoginResponseModelModel(false, null, "Token generated successfully.", new LoginResponseModelModel.DataObj(token));
     }
 }

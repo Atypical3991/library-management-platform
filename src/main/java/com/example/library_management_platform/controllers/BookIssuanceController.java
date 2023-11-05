@@ -34,21 +34,21 @@ public class BookIssuanceController {
 
     @PostMapping("")
     public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceModel payload, BindingResult result){
-        if(result.hasErrors()){
-            List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-            return new BaseResponseModel(false, String.join(", ", errors), "");
-        }
         try{
+            if(result.hasErrors()){
+                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+                return new BaseResponseModel(false, String.join(", ", errors), "");
+            }
             Boolean success = bookIssuanceManagerService.createIssuance(payload);
             if(success){
-                return new BaseResponseModel(true, null, "Book issue created successfully");
+                return new BaseResponseModel(true, null, "Woo hoo!! your issuance created successfully");
             }else{
-                return new BaseResponseModel(false, "something went wrong", null);
+                return new BaseResponseModel(false, "Oops!! your issuance creation failed.", null);
 
             }
         }catch (Exception e){
             log.error("BookIssuanceController, issueBook exception raised!! payload: {}",payload,e);
-            return new BaseResponseModel(false, "something went wrong!!", null);
+            return new BaseResponseModel(false, "Oops!! something went wrong!!", null);
         }
     }
 
@@ -59,7 +59,7 @@ public class BookIssuanceController {
              return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.DataObj(bookIssuanceManagerService.getAllIssuance()));
         }catch (Exception e){
             log.error("BookIssuanceController, getAllIssuance exception raised!!",e);
-            return new GetAllIssuanceResponseModel(false, "something went wrong!!", null,null);
+            return new GetAllIssuanceResponseModel(false, "Oops!! something went wrong!!", null,null);
         }
     }
 }

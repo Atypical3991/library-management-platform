@@ -30,7 +30,7 @@ public class BorrowerController {
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
             borrowerManagerService.createUser(payload);
-            return new BaseResponseModel(true,"","Congrats!! borrower added successfully.");
+            return new BaseResponseModel(true,"","Woo hoo!! your borrower added successfully.");
         }catch (Exception e){
             log.error("BorrowerController, addUser exception raised!! payload : {}",payload,e);
             return new BaseResponseModel(false,"Oops!! something went wrong.",null);
@@ -42,7 +42,7 @@ public class BorrowerController {
     public BaseResponseModel getBorrower(@PathVariable long borrowerId){
         try{
             BorrowerDetailsResponseModel.DataObj borrowerDetailsResponseDataObj = borrowerManagerService.getUserById(borrowerId);
-            return new BorrowerDetailsResponseModel(true,null,"Borrower details fetched successfully,",borrowerDetailsResponseDataObj);
+            return new BorrowerDetailsResponseModel(true,null,"Woo hoo!! your borrower details fetched successfully,",borrowerDetailsResponseDataObj);
         }catch (Exception e){
             log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",borrowerId,e);
             return new BorrowerDetailsResponseModel(false,"Oops!! something went wrong.",null,null);}

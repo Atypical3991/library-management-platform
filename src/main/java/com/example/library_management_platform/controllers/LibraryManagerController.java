@@ -43,7 +43,7 @@ public class LibraryManagerController {
     public BaseResponseModel getBorrower(@PathVariable long libraryManagerId){
         try{
             GetLibraryManagerByIdResponseModel.DataObj dataObj = libraryManagerService.getUserById(libraryManagerId);
-            return new GetLibraryManagerByIdResponseModel(true,null,"Borrower details fetched successfully,",dataObj);
+            return new GetLibraryManagerByIdResponseModel(true,null,"Woo hoo!! your borrower details fetched successfully,",dataObj);
         }catch (Exception e){
             log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",libraryManagerId,e);
             return new GetLibraryManagerByIdResponseModel(false,"Oops!! something went wrong.",null,null);}

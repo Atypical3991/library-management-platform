@@ -47,7 +47,7 @@ public class BookGenreController {
     public BaseResponseModel getAllGenres(){
         try{
             List<GetAllBookGenresResponseModel.GenreObj>  genresObjList = bookGenreManagerService.getAllItemsWithoutSearchCriteria();
-            return new GetAllBookGenresResponseModel(true,null,"Genres fetched successfully.", new GetAllBookGenresResponseModel.DataObj(genresObjList));
+            return new GetAllBookGenresResponseModel(true,null,"Woo hoo!! your genres fetched successfully.", new GetAllBookGenresResponseModel.DataObj(genresObjList));
         }catch (Exception e){
             log.error("GenreController, getAllGenres exception raised!!",e);
             return new GetAllBookGenresResponseModel(false,"Oops!! something went wrong",null,null);
@@ -58,7 +58,7 @@ public class BookGenreController {
     public BaseResponseModel getGenreByID(@PathVariable long genreId){
         try{
             GetBookGenreByIdResponseModel.GenreDetails genreDetails  = bookGenreManagerService.getItemById(genreId);
-            return new GetBookGenreByIdResponseModel(true,null,"Genre Details fetched successfully.", new GetBookGenreByIdResponseModel.DataObj(genreDetails));
+            return new GetBookGenreByIdResponseModel(true,null,"Woo hoo!! your genre details fetched successfully.", new GetBookGenreByIdResponseModel.DataObj(genreDetails));
         }catch (Exception e){
             log.error("GenreController, getGenreByID exception raised!!",e);
             return new GetBookGenreByIdResponseModel(false,"Oops!! something went wrong",null,null);
@@ -69,9 +69,9 @@ public class BookGenreController {
     public BaseResponseModel removeGenreById(@PathVariable long genreId){
         try{
             Boolean success =  bookGenreManagerService.removeItem(genreId);
-            return  new BaseResponseModel(success,"Genre removed successfully", null);
+            return  new BaseResponseModel(success,"Woo hoo!! your genre removed successfully", null);
         }catch (Exception e){
-            return  new BaseResponseModel(false,"something went wrong", null);
+            return  new BaseResponseModel(false,"Oops!! something went wrong", null);
         }
     }
 
@@ -79,9 +79,9 @@ public class BookGenreController {
     public BaseResponseModel removeGenreById(@PathVariable long genreId, @RequestBody UpdateBookGenreRequestModel payload){
         try{
             Boolean success = bookGenreManagerService.updateItem(payload,genreId);
-            return  new BaseResponseModel(success,"Genre updated successfully", null);
+            return  new BaseResponseModel(success,"Woo hoo!! your genre updated successfully", null);
         }catch (Exception e){
-            return  new BaseResponseModel(false,"something went wrong", null);
+            return  new BaseResponseModel(false,"Oops!! something went wrong", null);
         }
     }
 
