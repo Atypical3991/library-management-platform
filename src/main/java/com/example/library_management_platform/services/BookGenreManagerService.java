@@ -2,10 +2,10 @@ package com.example.library_management_platform.services;
 
 import com.example.library_management_platform.convertors.AddBookGenreRequestToBookGenreEntityModelConvertor;
 import com.example.library_management_platform.convertors.BookGenreEntityModelToBookGenreDetailsConvertor;
-import com.example.library_management_platform.models.api.request.AddBookGenre;
+import com.example.library_management_platform.models.api.request.AddBookGenreRequestModel;
 import com.example.library_management_platform.models.api.request.UpdateBookGenreRequestModel;
-import com.example.library_management_platform.models.api.response.GetAllBookGenresResponse;
-import com.example.library_management_platform.models.api.response.GetBookGenreById;
+import com.example.library_management_platform.models.api.response.GetAllBookGenresResponseModel;
+import com.example.library_management_platform.models.api.response.GetBookGenreByIdResponseModel;
 import com.example.library_management_platform.models.entities.BookGenre;
 import com.example.library_management_platform.repositories.BookGenreRepository;
 import com.example.library_management_platform.services.interfaces.ItemManagerInterface;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponse.GenreObj, GetBookGenreById.GenreDetails, UpdateBookGenreRequestModel,AddBookGenre,Object> {
+public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponseModel.GenreObj, GetBookGenreByIdResponseModel.GenreDetails, UpdateBookGenreRequestModel, AddBookGenreRequestModel,Object> {
 
     @Autowired
     AddBookGenreRequestToBookGenreEntityModelConvertor addBookGenreRequestToBookGenreEntityModelConvertor;
@@ -32,12 +32,12 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
     BookGenreRepository bookGenreRepository;
 
     @Override
-    public List<GetAllBookGenresResponse.GenreObj> getAllItems(Object itemModel) {
+    public List<GetAllBookGenresResponseModel.GenreObj> getAllItems(Object itemModel) {
        throw new RuntimeException("Not implemented");
     }
 
     @Override
-    public List<GetAllBookGenresResponse.GenreObj> getAllItemsWithoutSearchCriteria() {
+    public List<GetAllBookGenresResponseModel.GenreObj> getAllItemsWithoutSearchCriteria() {
         Sort sort = Sort.by(Sort.Order.asc("createdAt"));
         int page = 0;
         int size  = 20;
@@ -49,11 +49,11 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
             genresList.addAll(bookGenreListByPage);
             page += 1;
         }
-        return genresList.stream().map(genre -> new GetAllBookGenresResponse.GenreObj(genre.getId(), genre.getName())).toList();
+        return genresList.stream().map(genre -> new GetAllBookGenresResponseModel.GenreObj(genre.getId(), genre.getName())).toList();
     }
 
     @Override
-    public GetBookGenreById.GenreDetails getItemById(Long id) {
+    public GetBookGenreByIdResponseModel.GenreDetails getItemById(Long id) {
         Optional<BookGenre> genreObj = bookGenreRepository.findById(id);
         if(genreObj.isEmpty()){
             throw  new RuntimeException("No genre found");
@@ -62,7 +62,7 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
     }
 
     @Override
-    public Boolean addItem(AddBookGenre itemModel) {
+    public Boolean addItem(AddBookGenreRequestModel itemModel) {
         BookGenre bookGenre = addBookGenreRequestToBookGenreEntityModelConvertor.convert(itemModel);
         if(bookGenre ==  null){
             log.error("BookManagerService, addGenre null type genre can't be processed, payload: {}",itemModel);

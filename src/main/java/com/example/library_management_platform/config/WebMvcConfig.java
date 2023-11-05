@@ -10,6 +10,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
+        // Borrower authentication interceptor
         registry.addInterceptor(new BorrowerAuthInterceptor()).addPathPatterns("/api/books/**");
     }
 

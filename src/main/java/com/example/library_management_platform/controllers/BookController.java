@@ -1,12 +1,10 @@
 package com.example.library_management_platform.controllers;
 
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
-import com.example.library_management_platform.models.api.response.BaseResponse;
-import com.example.library_management_platform.models.api.response.GetAllBooksResponse;
-import com.example.library_management_platform.models.entities.Book;
+import com.example.library_management_platform.models.api.response.BaseResponseModel;
+import com.example.library_management_platform.models.api.response.GetAllBooksResponseModel;
 import com.example.library_management_platform.services.BookManagerService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -24,28 +22,28 @@ public class BookController {
     BookManagerService bookManagerService;
 
     @PostMapping("")
-    public BaseResponse addBook(@RequestBody @Valid AddBookRequestModel payload, BindingResult result) {
+    public BaseResponseModel addBook(@RequestBody @Valid AddBookRequestModel payload, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-            return new BaseResponse(false, String.join(", ", errors), "");
+            return new BaseResponseModel(false, String.join(", ", errors), "");
         }
         try {
             Boolean success = bookManagerService.addItem(payload);
-            return new BaseResponse(success, null, "Book added successfully");
+            return new BaseResponseModel(success, null, "Book added successfully");
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!! payload: {}", payload, e);
-            return new BaseResponse(false, "Something went wrong.", null);
+            return new BaseResponseModel(false, "Something went wrong.", null);
         }
     }
 
     @GetMapping("/all")
-    public BaseResponse getAllBooks(){
+    public BaseResponseModel getAllBooks(){
         try {
-            List<GetAllBooksResponse.GetAllBooksData.BookDetails> bookDetailsList = bookManagerService.getAllItemsWithoutSearchCriteria();
-            return new GetAllBooksResponse(true, null, "Book added successfully",new GetAllBooksResponse.GetAllBooksData(bookDetailsList.size(),bookDetailsList) );
+            List<GetAllBooksResponseModel.DataObj.BookDetails> bookDetailsList = bookManagerService.getAllItemsWithoutSearchCriteria();
+            return new GetAllBooksResponseModel(true, null, "Book added successfully",new GetAllBooksResponseModel.DataObj(bookDetailsList.size(),bookDetailsList) );
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!!", e);
-            return new GetAllBooksResponse(false, "Something went wrong.", null,null);
+            return new GetAllBooksResponseModel(false, "Something went wrong.", null,null);
         }
     }
 }

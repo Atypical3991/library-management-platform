@@ -1,14 +1,14 @@
 package com.example.library_management_platform.convertors;
 
-import com.example.library_management_platform.models.api.request.AddBorrowerRequest;
+import com.example.library_management_platform.models.api.request.AddBorrowerRequestModel;
 import com.example.library_management_platform.models.entities.Borrower;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddBorrowerRequestModelToBorrowerEntityModel implements Converter<AddBorrowerRequest, Borrower> {
+public class AddBorrowerRequestModelToBorrowerEntityModel implements Converter<AddBorrowerRequestModel, Borrower> {
     @Override
-    public Borrower convert(AddBorrowerRequest source) {
+    public Borrower convert(AddBorrowerRequestModel source) {
         Borrower borrower =  new Borrower();
         borrower.setFirstName(source.getFirstName());
         borrower.setLastName(source.getLastName());

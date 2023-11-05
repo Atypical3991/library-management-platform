@@ -6,17 +6,17 @@ import java.sql.Date;
 import java.util.List;
 
 @Data
-public class GetUserProfileResponse extends BaseResponse{
+public class GetUserProfileResponseModel extends BaseResponseModel {
 
-    private GetUserProfileData data;
+    private DataObj data;
 
-    public GetUserProfileResponse(Boolean success, String error, String message, GetUserProfileData data) {
+    public GetUserProfileResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }
 
     @Data
-    public class GetUserProfileData{
+    public class DataObj {
         private Long id;
         private String firstName;
         private String lastName;

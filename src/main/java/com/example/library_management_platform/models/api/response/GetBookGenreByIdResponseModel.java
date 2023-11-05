@@ -3,11 +3,11 @@ package com.example.library_management_platform.models.api.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-public class GetBookGenreById extends BaseResponse{
+public class GetBookGenreByIdResponseModel extends BaseResponseModel {
     @JsonProperty("data")
     private DataObj data;
 
-    public GetBookGenreById(Boolean success, String error, String message, DataObj data) {
+    public GetBookGenreByIdResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }

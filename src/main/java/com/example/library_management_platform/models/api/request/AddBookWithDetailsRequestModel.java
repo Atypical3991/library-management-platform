@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AddBookWithDetailsRequest {
+public class AddBookWithDetailsRequestModel {
     private String name;
     private List<Long> genreIds;
     private List<Long> authorIds;

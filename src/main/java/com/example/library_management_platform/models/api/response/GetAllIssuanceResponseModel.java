@@ -1,19 +1,17 @@
 package com.example.library_management_platform.models.api.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class GetAllIssuanceResponse extends BaseResponse {
+public class GetAllIssuanceResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
     private DataObj data;
 
-    public GetAllIssuanceResponse(Boolean success, String error, String message, DataObj data) {
+    public GetAllIssuanceResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }

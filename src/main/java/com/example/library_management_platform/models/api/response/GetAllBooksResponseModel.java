@@ -3,21 +3,21 @@ package com.example.library_management_platform.models.api.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
-public class GetAllBooksResponse extends BaseResponse {
+public class GetAllBooksResponseModel extends BaseResponseModel {
 
 
-    private GetAllBooksData data;
+    @JsonProperty("data")
+    private DataObj data;
 
-    public GetAllBooksResponse(Boolean success, String error, String message, GetAllBooksData data) {
+    public GetAllBooksResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }
 
-    public static class GetAllBooksData{
+    public static class DataObj {
 
         @JsonProperty("count")
         private Integer count;
@@ -25,7 +25,7 @@ public class GetAllBooksResponse extends BaseResponse {
         @JsonProperty("books")
         private List<BookDetails> books;
 
-        public GetAllBooksData(Integer count, List<BookDetails> books) {
+        public DataObj(Integer count, List<BookDetails> books) {
             this.count = count;
             this.books = books;
         }

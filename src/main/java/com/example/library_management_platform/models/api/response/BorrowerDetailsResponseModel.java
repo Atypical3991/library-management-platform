@@ -6,12 +6,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BorrowerDetailsResponse  extends BaseResponse{
+public class BorrowerDetailsResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
     private DataObj data;
 
-    public BorrowerDetailsResponse(Boolean success, String error, String message, DataObj data) {
+    public BorrowerDetailsResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }

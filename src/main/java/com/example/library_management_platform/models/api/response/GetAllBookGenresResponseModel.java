@@ -6,12 +6,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GetAllBookGenresResponse extends BaseResponse{
+public class GetAllBookGenresResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
     private DataObj data;
 
-    public GetAllBookGenresResponse(Boolean success, String error, String message, DataObj data) {
+    public GetAllBookGenresResponseModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }

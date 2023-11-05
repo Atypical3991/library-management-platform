@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class AddBookGenre {
+public class AddBookGenreRequestModel {
 
     @NotBlank(message = "Genre shouldn't be empty")
     @Pattern(regexp = "[a-zA-Z ]{3,30}", message = "Genre should contains only alphabets and spaces.")

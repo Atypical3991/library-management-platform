@@ -1,6 +1,6 @@
 package com.example.library_management_platform.convertors;
 
-import com.example.library_management_platform.models.api.response.GetAllIssuanceResponse;
+import com.example.library_management_platform.models.api.response.GetAllIssuanceResponseModel;
 import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.models.entities.BookIssuance;
 import com.example.library_management_platform.repositories.BookRepository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponse.IssuanceObj> {
+public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponseModel.IssuanceObj> {
 
     @Autowired
     BookRepository bookRepository;
@@ -22,9 +22,9 @@ public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<
 
 
     @Override
-    public GetAllIssuanceResponse.IssuanceObj convert(BookIssuance source) {
+    public GetAllIssuanceResponseModel.IssuanceObj convert(BookIssuance source) {
         Optional<Book> book = bookRepository.findById(source.getBookId());
-        return book.map(value -> new GetAllIssuanceResponse.IssuanceObj(
+        return book.map(value -> new GetAllIssuanceResponseModel.IssuanceObj(
                 value.getName(),
                 source.getBorrower().getUsername(),
                 source.getStatus().name().toLowerCase(),

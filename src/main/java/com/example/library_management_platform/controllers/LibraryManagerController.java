@@ -1,10 +1,10 @@
 package com.example.library_management_platform.controllers;
 
-
-import com.example.library_management_platform.models.api.request.AddBorrowerRequestModel;
+import com.example.library_management_platform.models.api.request.AddLibraryManagerRequestModel;
 import com.example.library_management_platform.models.api.response.BaseResponseModel;
 import com.example.library_management_platform.models.api.response.BorrowerDetailsResponseModel;
-import com.example.library_management_platform.services.BorrowerManagerService;
+import com.example.library_management_platform.models.api.response.GetLibraryManagerByIdResponseModel;
+import com.example.library_management_platform.services.LibraryManagerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,36 +15,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/borrowers")
+@RequestMapping("/api/library/managers")
 @Slf4j
-public class BorrowerController {
+public class LibraryManagerController {
 
     @Autowired
-    BorrowerManagerService borrowerManagerService;
+    LibraryManagerService libraryManagerService;
 
     @PostMapping("")
-    public BaseResponseModel addBorrower(@RequestBody @Valid AddBorrowerRequestModel payload, BindingResult result){
+    public BaseResponseModel createLibraryManager(@RequestBody @Valid  AddLibraryManagerRequestModel payload, BindingResult result){
         try{
             if(result.hasErrors()){
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
-            borrowerManagerService.createUser(payload);
+             libraryManagerService.createUser(payload);
             return new BaseResponseModel(true,"","Congrats!! borrower added successfully.");
         }catch (Exception e){
             log.error("BorrowerController, addUser exception raised!! payload : {}",payload,e);
             return new BaseResponseModel(false,"Oops!! something went wrong.",null);
 
         }
-    };
+    }
 
-    @GetMapping("/{borrowerId}")
-    public BaseResponseModel getBorrower(@PathVariable long borrowerId){
+
+    @GetMapping("/{libraryManagerId}")
+    public BaseResponseModel getBorrower(@PathVariable long libraryManagerId){
         try{
-            BorrowerDetailsResponseModel.DataObj borrowerDetailsResponseDataObj = borrowerManagerService.getUserById(borrowerId);
-            return new BorrowerDetailsResponseModel(true,null,"Borrower details fetched successfully,",borrowerDetailsResponseDataObj);
+            GetLibraryManagerByIdResponseModel.DataObj dataObj = libraryManagerService.getUserById(libraryManagerId);
+            return new GetLibraryManagerByIdResponseModel(true,null,"Borrower details fetched successfully,",dataObj);
         }catch (Exception e){
-            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",borrowerId,e);
-            return new BorrowerDetailsResponseModel(false,"Oops!! something went wrong.",null,null);}
+            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",libraryManagerId,e);
+            return new GetLibraryManagerByIdResponseModel(false,"Oops!! something went wrong.",null,null);}
     }
 }

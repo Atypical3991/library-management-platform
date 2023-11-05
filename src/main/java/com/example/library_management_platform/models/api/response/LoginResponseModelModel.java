@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class BorrowerLoginResponseModel extends BaseResponse{
+public class LoginResponseModelModel extends BaseResponseModel {
 
     @JsonProperty("data")
     private DataObj data;
 
-    public BorrowerLoginResponseModel(Boolean success, String error, String message, DataObj data) {
+    public LoginResponseModelModel(Boolean success, String error, String message, DataObj data) {
         super(success, error, message);
         this.data = data;
     }

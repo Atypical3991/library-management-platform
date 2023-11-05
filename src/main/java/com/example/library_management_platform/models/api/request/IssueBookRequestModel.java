@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class IssueBookRequest {
+public class IssueBookRequestModel {
     private Long userId;
     private Long bookId;
     private Date issueAt;

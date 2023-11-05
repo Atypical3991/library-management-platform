@@ -3,8 +3,7 @@ package com.example.library_management_platform.services;
 import com.example.library_management_platform.convertors.BookIssuanceEntityModelToIssuanceObjConvertor;
 import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceEntityModelConvertor;
 import com.example.library_management_platform.models.api.request.CreateBookIssuanceModel;
-import com.example.library_management_platform.models.api.response.BaseResponse;
-import com.example.library_management_platform.models.api.response.GetAllIssuanceResponse;
+import com.example.library_management_platform.models.api.response.GetAllIssuanceResponseModel;
 import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.models.entities.BookIssuance;
 import com.example.library_management_platform.models.entities.Borrower;
@@ -25,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceModel,Object, GetAllIssuanceResponse.IssuanceObj> {
+public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceModel,Object, GetAllIssuanceResponseModel.IssuanceObj> {
 
     @Autowired
     BookIssuanceRepository bookIssuanceRepository;
@@ -74,7 +73,7 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
         return null;
     }
 
-    public List<GetAllIssuanceResponse.IssuanceObj> getAllIssuance(){
+    public List<GetAllIssuanceResponseModel.IssuanceObj> getAllIssuance(){
         List<BookIssuance> bookIssuanceList = bookIssuanceRepository.findAll();
         return bookIssuanceList.stream().map(bookIssuance -> bookIssuanceEntityModelToIssuanceObjConvertor.convert(bookIssuance)).toList();
     }
