@@ -1,6 +1,5 @@
 package com.example.library_management_platform.models.api.response;
 
-import com.example.library_management_platform.models.services.absract.ItemModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -29,7 +28,11 @@ public class GetAllBookGenresResponse extends BaseResponse{
     }
 
     @Data
-    public static class GenreObj extends ItemModel {
+    public static class GenreObj  {
+
+        private Long id;
+        private String name;
+
         public GenreObj(Long id, String name) {
             this.setId(id);
             this.setName(name);

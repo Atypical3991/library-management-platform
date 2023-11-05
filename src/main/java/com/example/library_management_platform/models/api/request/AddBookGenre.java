@@ -1,7 +1,6 @@
 package com.example.library_management_platform.models.api.request;
 
 
-import com.example.library_management_platform.models.services.absract.CreateItemModel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

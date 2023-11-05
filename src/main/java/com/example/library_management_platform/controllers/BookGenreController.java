@@ -43,7 +43,7 @@ public class BookGenreController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     public BaseResponse getAllGenres(){
         try{
             List<GetAllBookGenresResponse.GenreObj>  genresObjList = bookGenreManagerService.getAllItemsWithoutSearchCriteria();
@@ -54,7 +54,7 @@ public class BookGenreController {
         }
     }
 
-    @GetMapping("/{genreId}")
+    @GetMapping("/single/{genreId}")
     public BaseResponse getGenreByID(@PathVariable long genreId){
         try{
             GetBookGenreById.GenreDetails genreDetails  = bookGenreManagerService.getItemById(genreId);
