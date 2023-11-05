@@ -1,10 +1,10 @@
 package com.example.library_management_platform.controllers;
 
-import com.example.library_management_platform.models.api.request.AddBookGenre;
+import com.example.library_management_platform.models.api.request.AddBookGenreRequestModel;
 import com.example.library_management_platform.models.api.request.UpdateBookGenreRequestModel;
-import com.example.library_management_platform.models.api.response.BaseResponse;
-import com.example.library_management_platform.models.api.response.GetAllBookGenresResponse;
-import com.example.library_management_platform.models.api.response.GetBookGenreById;
+import com.example.library_management_platform.models.api.response.BaseResponseModel;
+import com.example.library_management_platform.models.api.response.GetAllBookGenresResponseModel;
+import com.example.library_management_platform.models.api.response.GetBookGenreByIdResponseModel;
 import com.example.library_management_platform.services.BookGenreManagerService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -25,66 +25,64 @@ public class BookGenreController {
     BookGenreManagerService bookGenreManagerService;
 
     @PostMapping("")
-    public BaseResponse addGenre(@RequestBody @Valid AddBookGenre addBookGenrePayload, BindingResult result){
+    public BaseResponseModel addGenre(@RequestBody @Valid AddBookGenreRequestModel addBookGenreRequestModelPayload, BindingResult result){
         if(result.hasErrors()){
           List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-          return  new BaseResponse(false,String.join(", ",errors),"");
+          return  new BaseResponseModel(false,String.join(", ",errors),"");
         }
         try{
-            Boolean success = bookGenreManagerService.addItem(addBookGenrePayload);
+            Boolean success = bookGenreManagerService.addItem(addBookGenreRequestModelPayload);
             if(success){
-                return new BaseResponse(true,null,"Genre added successfully.");
+                return new BaseResponseModel(true,null,"Genre added successfully.");
             }else{
-                return new BaseResponse(true,null,"Genre addition failed.");
+                return new BaseResponseModel(true,null,"Genre addition failed.");
             }
         }catch (Exception e){
-            log.error("GenreController, addGenre exception raised!! payload : {}", addBookGenrePayload,e);
-            return new BaseResponse(false,"something went wrong",null);
+            log.error("GenreController, addGenre exception raised!! payload : {}", addBookGenreRequestModelPayload,e);
+            return new BaseResponseModel(false,"something went wrong",null);
         }
     }
 
-    @GetMapping("")
-    public BaseResponse getAllGenres(){
+    @GetMapping("/all")
+    public BaseResponseModel getAllGenres(){
         try{
-            List<GetAllBookGenresResponse.GenreObj>  genresObjList = bookGenreManagerService.getAllItemsWithoutSearchCriteria();
-            return new GetAllBookGenresResponse(true,null,"Genres fetched successfully.", new GetAllBookGenresResponse.DataObj(genresObjList));
+            List<GetAllBookGenresResponseModel.GenreObj>  genresObjList = bookGenreManagerService.getAllItemsWithoutSearchCriteria();
+            return new GetAllBookGenresResponseModel(true,null,"Woo hoo!! your genres fetched successfully.", new GetAllBookGenresResponseModel.DataObj(genresObjList));
         }catch (Exception e){
             log.error("GenreController, getAllGenres exception raised!!",e);
-            return new BaseResponse(false,"something went wrong",null);
+            return new GetAllBookGenresResponseModel(false,"Oops!! something went wrong",null,null);
         }
     }
 
-    @GetMapping("/{genreId}")
-    public BaseResponse getGenreByID(@PathVariable long genreId){
+    @GetMapping("/single/{genreId}")
+    public BaseResponseModel getGenreByID(@PathVariable long genreId){
         try{
-            GetBookGenreById.GenreDetails genreDetails  = bookGenreManagerService.getItemById(genreId);
-            return new GetBookGenreById(true,null,"Genre Details fetched successfully.", new GetBookGenreById.DataObj(genreDetails));
+            GetBookGenreByIdResponseModel.GenreDetails genreDetails  = bookGenreManagerService.getItemById(genreId);
+            return new GetBookGenreByIdResponseModel(true,null,"Woo hoo!! your genre details fetched successfully.", new GetBookGenreByIdResponseModel.DataObj(genreDetails));
         }catch (Exception e){
             log.error("GenreController, getGenreByID exception raised!!",e);
-            return new BaseResponse(false,"something went wrong",null);
+            return new GetBookGenreByIdResponseModel(false,"Oops!! something went wrong",null,null);
         }
     }
 
     @DeleteMapping("/{genreId}")
-    public BaseResponse removeGenreById(@PathVariable long genreId){
+    public BaseResponseModel removeGenreById(@PathVariable long genreId){
         try{
             Boolean success =  bookGenreManagerService.removeItem(genreId);
-            return  new BaseResponse(success,"Genre removed successfully", null);
+            return  new BaseResponseModel(success,"Woo hoo!! your genre removed successfully", null);
         }catch (Exception e){
-            return  new BaseResponse(false,"something went wrong", null);
+            return  new BaseResponseModel(false,"Oops!! something went wrong", null);
         }
     }
 
     @PutMapping("/{genreId}")
-    public BaseResponse removeGenreById(@PathVariable long genreId, @RequestBody UpdateBookGenreRequestModel payload){
+    public BaseResponseModel removeGenreById(@PathVariable long genreId, @RequestBody UpdateBookGenreRequestModel payload){
         try{
             Boolean success = bookGenreManagerService.updateItem(payload,genreId);
-            return  new BaseResponse(success,"Genre updated successfully", null);
+            return  new BaseResponseModel(success,"Woo hoo!! your genre updated successfully", null);
         }catch (Exception e){
-            return  new BaseResponse(false,"something went wrong", null);
+            return  new BaseResponseModel(false,"Oops!! something went wrong", null);
         }
     }
-
-
 
 }

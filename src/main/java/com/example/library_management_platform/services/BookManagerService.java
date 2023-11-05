@@ -1,8 +1,8 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.BookToConvertorBookDetails;
+import com.example.library_management_platform.convertors.BookEntityModelToBookDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
-import com.example.library_management_platform.models.api.response.GetAllBooksResponse;
+import com.example.library_management_platform.models.api.response.GetAllBooksResponseModel;
 import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.models.entities.BookGenre;
 import com.example.library_management_platform.repositories.BookGenreRepository;
@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
 @Slf4j
-public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponse.GetAllBooksData.BookDetails, Object, Object,AddBookRequestModel,Object> {
+public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.DataObj.BookDetails, Object, Object,AddBookRequestModel,Object> {
 
     @Autowired
     BookRepository bookRepository;
@@ -29,18 +28,18 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
     BookGenreRepository  bookGenreRepository;
 
     @Autowired
-    BookToConvertorBookDetails bookToConvertorBookDetails;
+    BookEntityModelToBookDetailsConvertor bookEntityModelToBookDetailsConvertor;
 
 
     @Override
-    public List<GetAllBooksResponse.GetAllBooksData.BookDetails> getAllItems(Object itemSearchModel) {
+    public List<GetAllBooksResponseModel.DataObj.BookDetails> getAllItems(Object searchRequestModel) {
         return null;
     }
 
     @Override
-    public List<GetAllBooksResponse.GetAllBooksData.BookDetails> getAllItemsWithoutSearchCriteria() {
+    public List<GetAllBooksResponseModel.DataObj.BookDetails> getAllItemsWithoutSearchCriteria() {
         List<Book> bookList = bookRepository.findAll();
-        return bookList.stream().map(book -> bookToConvertorBookDetails.convert(book)).toList();
+        return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
     }
 
     @Override
