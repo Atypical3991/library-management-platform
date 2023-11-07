@@ -34,11 +34,10 @@ public class BorrowerController {
         }catch (Exception e){
             log.error("BorrowerController, addUser exception raised!! payload : {}",payload,e);
             return new BaseResponseModel(false,"Oops!! something went wrong.",null);
-
         }
     };
 
-    @GetMapping("/{borrowerId}")
+    @GetMapping("/get/{borrowerId}")
     public BaseResponseModel getBorrower(@PathVariable long borrowerId){
         try{
             BorrowerDetailsResponseModel.DataObj borrowerDetailsResponseDataObj = borrowerManagerService.getUserById(borrowerId);

@@ -53,7 +53,7 @@ public class BookIssuanceController {
     }
 
 
-    @GetMapping("/all")
+    @GetMapping("/get/all")
     public GetAllIssuanceResponseModel getAllIssuance(){
         try{
              return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.DataObj(bookIssuanceManagerService.getAllIssuance()));

@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Service
 @Slf4j
@@ -16,9 +19,6 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
 
     @Autowired
     BorrowerRepository borrowerRepository;
-
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
 
     @Override
     public String login(LoginRequestModel loginRequestModel) {
@@ -28,7 +28,10 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
                 log.error("BorrowerLoginService, login borrower not found. payload: {}", loginRequestModel);
                 return null;
             }
-            return jwtTokenUtil.generateJwt(borrower.getUsername());
+            Map<String,String> claims = new HashMap<>();
+            claims.put("username",borrower.getUsername());
+            claims.put("role","user");
+            return JwtTokenUtil.generateJwt(claims);
         }catch (Exception e){
             log.error("BorrowerLoginService, login exception raised!! payload: {}", loginRequestModel,e);
             return null;

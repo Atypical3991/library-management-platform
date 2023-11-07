@@ -36,14 +36,14 @@ public class BookController {
         }
     }
 
-    @GetMapping("/all")
-    public BaseResponseModel getAllBooks(){
+    @GetMapping("/get/all")
+    public BaseResponseModel getAllBooks() {
         try {
             List<GetAllBooksResponseModel.DataObj.BookDetails> bookDetailsList = bookManagerService.getAllItemsWithoutSearchCriteria();
-            return new GetAllBooksResponseModel(true, null, "Woo hoo!! your book added successfully",new GetAllBooksResponseModel.DataObj(bookDetailsList.size(),bookDetailsList) );
+            return new GetAllBooksResponseModel(true, null, "Woo hoo!! your book added successfully", new GetAllBooksResponseModel.DataObj(bookDetailsList.size(), bookDetailsList));
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!!", e);
-            return new GetAllBooksResponseModel(false, "Oops!! something went wrong.", null,null);
+            return new GetAllBooksResponseModel(false, "Oops!! something went wrong.", null, null);
         }
     }
 }
