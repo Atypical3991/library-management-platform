@@ -5,43 +5,44 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 import static javax.crypto.Cipher.SECRET_KEY;
 
 
-@Component
 @Slf4j
 public class JwtTokenUtil {
 
-    @Autowired
-    EnvConfig envConfig;
-
-
-    private Key getSigningKey(){
-        return new SecretKeySpec(envConfig.SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+    private static Key getSigningKey(){
+        return new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
-    public String generateJwt(String subject) {
+
+
+    public static String generateJwt(Map<String,String> claims) {
         Key SIGNING_KEY = getSigningKey();
 
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + envConfig.EXPIRATION_TIME);
+        Date expiration = new Date(now.getTime() + System.getenv("EXPIRATION_TIME"));
 
         return Jwts.builder()
-                .setSubject(subject)
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .compact();
     }
 
-    public  String parseJwt(String token) {
+    public static Claims parseJwt(String token) {
         Key SIGNING_KEY = getSigningKey();
         try {
             Claims claims = Jwts.parser()
@@ -49,7 +50,7 @@ public class JwtTokenUtil {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            return claims.getSubject();
+            return claims;
         } catch (Exception e) {
             log.error("JwtTokenUtil, exception raised!!",e);
             return null; // Token is invalid or expired

@@ -43,7 +43,7 @@ public class BookGenreController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get/all")
     public BaseResponseModel getAllGenres(){
         try{
             List<GetAllBookGenresResponseModel.GenreObj>  genresObjList = bookGenreManagerService.getAllItemsWithoutSearchCriteria();
@@ -54,7 +54,7 @@ public class BookGenreController {
         }
     }
 
-    @GetMapping("/single/{genreId}")
+    @GetMapping("/get/{genreId}")
     public BaseResponseModel getGenreByID(@PathVariable long genreId){
         try{
             GetBookGenreByIdResponseModel.GenreDetails genreDetails  = bookGenreManagerService.getItemById(genreId);
@@ -65,7 +65,7 @@ public class BookGenreController {
         }
     }
 
-    @DeleteMapping("/{genreId}")
+    @DeleteMapping("/delete/{genreId}")
     public BaseResponseModel removeGenreById(@PathVariable long genreId){
         try{
             Boolean success =  bookGenreManagerService.removeItem(genreId);
@@ -75,7 +75,7 @@ public class BookGenreController {
         }
     }
 
-    @PutMapping("/{genreId}")
+    @PutMapping("/update/{genreId}")
     public BaseResponseModel removeGenreById(@PathVariable long genreId, @RequestBody UpdateBookGenreRequestModel payload){
         try{
             Boolean success = bookGenreManagerService.updateItem(payload,genreId);

@@ -30,7 +30,7 @@ public class LibraryManagerController {
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
              libraryManagerService.createUser(payload);
-            return new BaseResponseModel(true,"","Congrats!! borrower added successfully.");
+            return new BaseResponseModel(true,"","Congrats!! Library Manager added successfully.");
         }catch (Exception e){
             log.error("BorrowerController, addUser exception raised!! payload : {}",payload,e);
             return new BaseResponseModel(false,"Oops!! something went wrong.",null);
