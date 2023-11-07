@@ -14,22 +14,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AdminAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String authorizationToken = request.getHeader(HeaderParams.AUTHORIZATION);
-        if(authorizationToken ==  null){
+        String authorizationToken = request.getHeader(HeaderParams.ADMIN_SECRET_KEY_HEADER);
+        if(authorizationToken ==  null || authorizationToken.equalsIgnoreCase(System.getenv("ADMIN_SECRET_KEY"))){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or missing oAuthorization header.");
         }
-        Claims claims  =   JwtTokenUtil.parseJwt(authorizationToken);
-        String username =  (String)claims.get("username");
-        String role = (String) claims.get("role");
-        if(username == null|| role == null || !role.equalsIgnoreCase("admin")){
-            log.error("BorrowerAuthInterceptor, preHandle invalid token!!");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid token!");
-            response.getWriter().flush();
-            response.getWriter().close();
-            return false;
-        }
-        request.setAttribute("username",username);
         return true;
     }
 }

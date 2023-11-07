@@ -1,9 +1,7 @@
 package com.example.library_management_platform.services;
 
 import com.example.library_management_platform.models.api.request.LoginRequestModel;
-import com.example.library_management_platform.models.entities.Borrower;
 import com.example.library_management_platform.models.entities.LibraryManager;
-import com.example.library_management_platform.repositories.LibraryAdminRepository;
 import com.example.library_management_platform.repositories.LibraryManagerRepository;
 import com.example.library_management_platform.services.interfaces.LoginLogoutInterface;
 import com.example.library_management_platform.utils.JwtTokenUtil;
