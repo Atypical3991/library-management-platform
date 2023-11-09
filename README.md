@@ -1,2 +1,2 @@
-# library-management-platform
-A library management platform with user roles and authentication support.
+A basic library management platform backend using Java's Springboot framework.  
+
