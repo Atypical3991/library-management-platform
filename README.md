@@ -1,2 +1,2 @@
-A basic library management platform backend using Java's Springboot framework.  
+A basic library management platform backend, using Java's Springboot framework.  
 
