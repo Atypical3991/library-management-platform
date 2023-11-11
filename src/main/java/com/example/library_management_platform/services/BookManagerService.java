@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.DataObj.BookDetails, Object, Object,AddBookRequestModel,Object> {
+public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object,AddBookRequestModel,Object> {
 
     @Autowired
     BookRepository bookRepository;
@@ -32,12 +32,12 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
 
 
     @Override
-    public List<GetAllBooksResponseModel.DataObj.BookDetails> getAllItems(Object searchRequestModel) {
+    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Object searchRequestModel) {
         return null;
     }
 
     @Override
-    public List<GetAllBooksResponseModel.DataObj.BookDetails> getAllItemsWithoutSearchCriteria() {
+    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItemsWithoutSearchCriteria() {
         List<Book> bookList = bookRepository.findAll();
         return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
     }

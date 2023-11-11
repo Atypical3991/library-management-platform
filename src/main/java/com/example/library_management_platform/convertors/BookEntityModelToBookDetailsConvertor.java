@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BookEntityModelToBookDetailsConvertor implements Converter<Book, GetAllBooksResponseModel.DataObj.BookDetails> {
+public class BookEntityModelToBookDetailsConvertor implements Converter<Book, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> {
     @Override
-    public GetAllBooksResponseModel.DataObj.BookDetails convert(Book source) {
+    public GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails convert(Book source) {
 
         List<String> genres  = new ArrayList<>();
         for(BookGenre genre: source.getBookGenres()){
             genres.add(genre.getName());
         }
-        return new GetAllBooksResponseModel.DataObj.BookDetails(
+        return new GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails(
                 source.getId(),
                 source.getName(),
                 source.getAuthor(),

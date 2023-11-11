@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class BookGenreEntityModelToBookGenreDetailsConvertor implements Converter<BookGenre, GetBookGenreByIdResponseModel.GenreDetails> {
+public class BookGenreEntityModelToBookGenreDetailsConvertor implements Converter<BookGenre, GetBookGenreByIdResponseModel.BookGenreByIdDetails> {
 
 
     @Override
-    public GetBookGenreByIdResponseModel.GenreDetails convert(BookGenre bookGenre) {
-        return new GetBookGenreByIdResponseModel.GenreDetails(bookGenre.getId(), bookGenre.getName());
+    public GetBookGenreByIdResponseModel.BookGenreByIdDetails convert(BookGenre bookGenre) {
+        return new GetBookGenreByIdResponseModel.BookGenreByIdDetails(bookGenre.getId(), bookGenre.getName());
     }
 }

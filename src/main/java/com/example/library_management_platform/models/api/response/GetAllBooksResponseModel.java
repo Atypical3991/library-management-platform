@@ -10,28 +10,28 @@ public class GetAllBooksResponseModel extends BaseResponseModel {
 
 
     @JsonProperty("data")
-    private DataObj data;
+    private AllBookDetailsData data;
 
-    public GetAllBooksResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetAllBooksResponseModel(Boolean success, String error, String message, AllBookDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
-    public static class DataObj {
+    public static class AllBookDetailsData {
 
         @JsonProperty("count")
         private Integer count;
 
         @JsonProperty("books")
-        private List<BookDetails> books;
+        private List<AllBookDetails> books;
 
-        public DataObj(Integer count, List<BookDetails> books) {
+        public AllBookDetailsData(Integer count, List<AllBookDetails> books) {
             this.count = count;
             this.books = books;
         }
 
         @Data
-        public static class BookDetails{
+        public static class AllBookDetails {
             @JsonProperty("id")
             private long id;
             @JsonProperty("name")
@@ -43,7 +43,7 @@ public class GetAllBooksResponseModel extends BaseResponseModel {
             @JsonProperty("publisher")
             private String publisher;
 
-            public BookDetails(long id, String name, String author, List<String> genres, String publisher) {
+            public AllBookDetails(long id, String name, String author, List<String> genres, String publisher) {
                 this.id = id;
                 this.name = name;
                 this.author = author;

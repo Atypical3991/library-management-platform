@@ -7,18 +7,18 @@ import lombok.Data;
 public class LoginResponseModelModel extends BaseResponseModel {
 
     @JsonProperty("data")
-    private DataObj data;
+    private LoginResponseDetailsData data;
 
-    public LoginResponseModelModel(Boolean success, String error, String message, DataObj data) {
+    public LoginResponseModelModel(Boolean success, String error, String message, LoginResponseDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
-    public static class DataObj{
+    public static class LoginResponseDetailsData {
         @JsonProperty("token")
         private String token;
 
-        public DataObj(String token) {
+        public LoginResponseDetailsData(String token) {
             this.token = token;
         }
     }

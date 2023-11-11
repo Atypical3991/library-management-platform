@@ -12,7 +12,7 @@ import java.util.List;
          @UniqueConstraint(columnNames = "contact_number"),
          @UniqueConstraint(columnNames = "username")
 })
-public class Borrower extends BaseEntity {
+public class Borrower extends User {
 
     @Column(name="username")
     private String username;
@@ -50,6 +50,9 @@ public class Borrower extends BaseEntity {
     @Column(name="address")
     private String address;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "library_membership_id")
+    private LibraryMembership libraryMembership;
 
     public enum StatusEnum{
         ACTIVE,

@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceModel,Object, GetAllIssuanceResponseModel.IssuanceObj> {
+public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceModel,Object, GetAllIssuanceResponseModel.AllIssuanceObj, BookIssuance.StatusEnum, BookIssuance> {
 
     @Autowired
     BookIssuanceRepository bookIssuanceRepository;
@@ -43,7 +43,7 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED,isolation=Isolation.REPEATABLE_READ)
-    public Boolean createIssuance(CreateBookIssuanceModel issuance) {
+    public BookIssuance createIssuance(CreateBookIssuanceModel issuance) {
         Optional<Book> book = bookRepository.findById(issuance.getBookId());
         if(book.isEmpty() || book.get().getStatus() != Book.StatusEnum.ACTIVE){
             throw new RuntimeException("Either bookId is invalid or book has already been issued");
@@ -56,10 +56,12 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
         BookIssuance bookIssuance = createBookIssuanceModelToBookIssuanceEntityModelConvertor.convert(issuance);
         if(bookIssuance == null){
             log.error("BookIssuanceManagerService, createIssuance returned null BookIssuance model");
-            return false;
+            return null;
         }
         bookIssuanceRepository.save(bookIssuance);
-        return true;
+        book.get().setStatus(Book.StatusEnum.ISSUANCE_REQUESTED);
+        bookRepository.save(book.get());
+        return bookIssuance;
 
     }
 
@@ -73,8 +75,8 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
         return null;
     }
 
-    public List<GetAllIssuanceResponseModel.IssuanceObj> getAllIssuance(){
-        List<BookIssuance> bookIssuanceList = bookIssuanceRepository.findAll();
+    public List<GetAllIssuanceResponseModel.AllIssuanceObj> getAllIssuance(BookIssuance.StatusEnum statusEnum ){
+        List<BookIssuance> bookIssuanceList = bookIssuanceRepository.findAllByStatus(statusEnum);
         return bookIssuanceList.stream().map(bookIssuance -> bookIssuanceEntityModelToIssuanceObjConvertor.convert(bookIssuance)).toList();
     }
 }

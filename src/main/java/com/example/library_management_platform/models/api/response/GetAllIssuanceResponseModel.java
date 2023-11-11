@@ -9,24 +9,24 @@ import java.util.List;
 public class GetAllIssuanceResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
-    private DataObj data;
+    private AllIssuanceDetailsData data;
 
-    public GetAllIssuanceResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetAllIssuanceResponseModel(Boolean success, String error, String message, AllIssuanceDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
     @Data
-    public static class DataObj {
-        private List<IssuanceObj> issuanceObjList;
+    public static class AllIssuanceDetailsData {
+        private List<AllIssuanceObj> allIssuanceObjList;
 
-        public DataObj(List<IssuanceObj> issuanceObjList) {
-            this.issuanceObjList = issuanceObjList;
+        public AllIssuanceDetailsData(List<AllIssuanceObj> allIssuanceObjList) {
+            this.allIssuanceObjList = allIssuanceObjList;
         }
     }
 
     @Data
-    public static class IssuanceObj{
+    public static class AllIssuanceObj {
         @JsonProperty("bookName")
         private String bookName;
 
@@ -43,7 +43,7 @@ public class GetAllIssuanceResponseModel extends BaseResponseModel {
         private String status;
 
 
-        public IssuanceObj(String bookName, String username, String startDate, String endDate, String status) {
+        public AllIssuanceObj(String bookName, String username, String startDate, String endDate, String status) {
             this.bookName = bookName;
             this.username = username;
             this.startDate = startDate;

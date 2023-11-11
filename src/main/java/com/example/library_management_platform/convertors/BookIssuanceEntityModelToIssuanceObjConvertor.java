@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponseModel.IssuanceObj> {
+public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponseModel.AllIssuanceObj> {
 
     @Autowired
     BookRepository bookRepository;
@@ -22,9 +22,9 @@ public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<
 
 
     @Override
-    public GetAllIssuanceResponseModel.IssuanceObj convert(BookIssuance source) {
+    public GetAllIssuanceResponseModel.AllIssuanceObj convert(BookIssuance source) {
         Optional<Book> book = bookRepository.findById(source.getBookId());
-        return book.map(value -> new GetAllIssuanceResponseModel.IssuanceObj(
+        return book.map(value -> new GetAllIssuanceResponseModel.AllIssuanceObj(
                 value.getName(),
                 source.getBorrower().getUsername(),
                 source.getStatus().name().toLowerCase(),

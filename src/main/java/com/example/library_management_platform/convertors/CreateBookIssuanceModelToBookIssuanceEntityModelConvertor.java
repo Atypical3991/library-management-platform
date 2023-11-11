@@ -26,7 +26,7 @@ public class CreateBookIssuanceModelToBookIssuanceEntityModelConvertor implement
         try{
             BookIssuance bookIssuance =  new BookIssuance();
             bookIssuance.setBookId(source.getBookId());
-            bookIssuance.setStatus(BookIssuance.StatusEnum.ACTIVE);
+            bookIssuance.setStatus(BookIssuance.StatusEnum.REQUESTED);
             Date todayDate = new Date();
             Date startDate = DateUtil.convertToDate(source.getStartDate());
             Date endDate = DateUtil.convertToDate(source.getEndDate());

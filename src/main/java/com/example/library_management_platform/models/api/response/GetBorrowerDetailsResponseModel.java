@@ -3,20 +3,18 @@ package com.example.library_management_platform.models.api.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class BorrowerDetailsResponseModel extends BaseResponseModel {
+public class GetBorrowerDetailsResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
-    private DataObj data;
+    private BorrowerDetails data;
 
-    public BorrowerDetailsResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetBorrowerDetailsResponseModel(Boolean success, String error, String message, BorrowerDetails data) {
         super(success, error, message);
         this.data = data;
     }
 
-    public static class DataObj{
+    public static class BorrowerDetails {
         @JsonProperty("email")
         private String email;
 
@@ -32,19 +30,14 @@ public class BorrowerDetailsResponseModel extends BaseResponseModel {
         @JsonProperty("lastName")
         private String lastName;
 
-        @JsonProperty("issuanceList")
-        private List<Long> issuanceList;
 
-
-        public DataObj(String email, String number, String username, String firstName, String lastName) {
+        public BorrowerDetails(String email, String number, String username, String firstName, String lastName) {
             this.email = email;
             this.number = number;
             this.username = username;
             this.firstName = firstName;
             this.lastName = lastName;
-//            this.issuanceList = issuanceList;
         }
-
     }
 
 

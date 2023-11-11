@@ -28,7 +28,7 @@ public class JwtTokenUtil {
     }
 
 
-    public static String generateJwt(Map<String,String> claims) {
+    public static String generateJwt(Map<String,Object> claims) {
         Key SIGNING_KEY = getSigningKey();
 
         Date now = new Date();

@@ -2,8 +2,11 @@ package com.example.library_management_platform.convertors;
 
 import com.example.library_management_platform.models.api.request.AddLibraryManagerRequestModel;
 import com.example.library_management_platform.models.entities.LibraryManager;
+import com.example.library_management_platform.models.entities.User;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import javax.management.relation.Role;
 
 @Component
 public class AddLibraryManagerRequestModelToLibraryManagerEntityConvertor implements Converter<AddLibraryManagerRequestModel, LibraryManager> {
@@ -16,6 +19,7 @@ public class AddLibraryManagerRequestModelToLibraryManagerEntityConvertor implem
         libraryManager.setLastName(source.getLastName());
         libraryManager.setContactEmail(source.getContactEmail());
         libraryManager.setContactNumber(source.getContactNumber());
+        libraryManager.setRole(User.RoleEnum.library_manager);
         return libraryManager;
     }
 }

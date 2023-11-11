@@ -37,6 +37,7 @@ public class Book  extends BaseEntity {
     private String publisher;
 
     public enum StatusEnum {
+        ISSUANCE_REQUESTED,
         ACTIVE,
         IN_ACTIVE
     }
