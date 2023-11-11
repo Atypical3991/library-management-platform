@@ -2,7 +2,9 @@ package com.example.library_management_platform.services;
 
 import com.example.library_management_platform.models.api.request.LoginRequestModel;
 import com.example.library_management_platform.models.entities.LibraryManager;
+import com.example.library_management_platform.models.entities.Sessions;
 import com.example.library_management_platform.repositories.LibraryManagerRepository;
+import com.example.library_management_platform.repositories.SessionsRepository;
 import com.example.library_management_platform.services.interfaces.LoginLogoutInterface;
 import com.example.library_management_platform.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,9 @@ public class LibraryManagerLoginLogoutService implements LoginLogoutInterface<Lo
     @Autowired
     LibraryManagerRepository libraryManagerRepository;
 
+    @Autowired
+    SessionsRepository sessionsRepository;
+
     @Override
     public String login(LoginRequestModel loginRequestModel) {
         try{
@@ -27,10 +32,17 @@ public class LibraryManagerLoginLogoutService implements LoginLogoutInterface<Lo
                 log.error("LibraryManagerLoginLogoutService, login library_manager not found. payload: {}", loginRequestModel);
                 return null;
             }
-            Map<String,String> claims = new HashMap<>();
+            Map<String,Object> claims = new HashMap<>();
             claims.put("username",libraryManager.getUsername());
-            claims.put("role","library_manager");
-            return JwtTokenUtil.generateJwt(claims);
+            claims.put("role",libraryManager.getRole());
+            String token = JwtTokenUtil.generateJwt(claims);
+            if(token != null){
+                Sessions sessions =  new Sessions();
+                sessions.setToken(token);
+                sessions.setUserId(libraryManager.getId());
+                sessionsRepository.save(sessions);
+            }
+            return token;
         }catch (Exception e){
             log.error("LibraryManagerLoginLogoutService, login exception raised!! payload: {}", loginRequestModel,e);
             return null;

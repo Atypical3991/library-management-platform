@@ -1,9 +1,11 @@
 package com.example.library_management_platform.controllers;
 
 import com.example.library_management_platform.models.api.request.LoginRequestModel;
-import com.example.library_management_platform.models.api.response.BaseResponseModel;
 import com.example.library_management_platform.models.api.response.LoginResponseModelModel;
 import com.example.library_management_platform.services.LibraryManagerLoginLogoutService;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,12 @@ public class LibraryManagerLoginLogoutController {
     LibraryManagerLoginLogoutService libraryManagerLoginLogoutService;
 
     @PostMapping("/login")
-    public BaseResponseModel login(@RequestBody  @Valid  LoginRequestModel loginRequestModel, BindingResult result){
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
+    })
+    public LoginResponseModelModel login(@RequestBody  @Valid  LoginRequestModel loginRequestModel, BindingResult result){
         try {
             if (result.hasErrors()) {
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
@@ -35,7 +42,7 @@ public class LibraryManagerLoginLogoutController {
             if (token == null) {
                 return new LoginResponseModelModel(false, "Oops!! token generation failed.", "", null);
             }
-            return new LoginResponseModelModel(true, null, "Woo hoo!! Successfully logged in.", new LoginResponseModelModel.DataObj(token));
+            return new LoginResponseModelModel(true, null, "Woo hoo!! Successfully logged in.", new LoginResponseModelModel.LoginResponseDetailsData(token));
         }catch (Exception e){
             log.error("LibraryManagerLoginLogoutController, login exception raised!! payload: {}",loginRequestModel,e);
             return new LoginResponseModelModel(false, "Oops!! something went wrong.", "", null);

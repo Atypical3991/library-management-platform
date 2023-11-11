@@ -2,7 +2,9 @@ package com.example.library_management_platform.services;
 
 import com.example.library_management_platform.models.api.request.LoginRequestModel;
 import com.example.library_management_platform.models.entities.Borrower;
+import com.example.library_management_platform.models.entities.Sessions;
 import com.example.library_management_platform.repositories.BorrowerRepository;
+import com.example.library_management_platform.repositories.SessionsRepository;
 import com.example.library_management_platform.services.interfaces.LoginLogoutInterface;
 import com.example.library_management_platform.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
     @Autowired
     BorrowerRepository borrowerRepository;
 
+    @Autowired
+    SessionsRepository sessionsRepository;
+
     @Override
     public String login(LoginRequestModel loginRequestModel) {
         try{
@@ -28,10 +33,17 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
                 log.error("BorrowerLoginService, login borrower not found. payload: {}", loginRequestModel);
                 return null;
             }
-            Map<String,String> claims = new HashMap<>();
+            Map<String,Object> claims = new HashMap<>();
             claims.put("username",borrower.getUsername());
-            claims.put("role","user");
-            return JwtTokenUtil.generateJwt(claims);
+            claims.put("role",borrower.getRole());
+            String token = JwtTokenUtil.generateJwt(claims);
+            if(token != null){
+                Sessions sessions =  new Sessions();
+                sessions.setToken(token);
+                sessions.setUserId(borrower.getId());
+                sessionsRepository.save(sessions);
+            }
+            return token;
         }catch (Exception e){
             log.error("BorrowerLoginService, login exception raised!! payload: {}", loginRequestModel,e);
             return null;
@@ -39,7 +51,7 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
     }
 
     @Override
-    public String logout(Long id) {
+    public String logout(Long userId) {
         return null;
     }
 }

@@ -9,31 +9,31 @@ import java.util.List;
 public class GetAllBookGenresResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
-    private DataObj data;
+    private AllGenreDetailsData data;
 
-    public GetAllBookGenresResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetAllBookGenresResponseModel(Boolean success, String error, String message, AllGenreDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
     @Data
-    public static class DataObj{
+    public static class AllGenreDetailsData {
 
         @JsonProperty("genres")
-        private List<GenreObj> genres;
+        private List<AllGenreObj> genres;
 
-        public DataObj(List<GenreObj> genres) {
+        public AllGenreDetailsData(List<AllGenreObj> genres) {
             this.genres = genres;
         }
     }
 
     @Data
-    public static class GenreObj  {
+    public static class AllGenreObj {
 
         private Long id;
         private String name;
 
-        public GenreObj(Long id, String name) {
+        public AllGenreObj(Long id, String name) {
             this.setId(id);
             this.setName(name);
         }

@@ -7,14 +7,14 @@ import lombok.Data;
 public class GetLibraryManagerByIdResponseModel extends BaseResponseModel {
 
     @JsonProperty("data")
-    private DataObj data;
+    private LibraryManagerByIdDetailsData data;
 
-    public GetLibraryManagerByIdResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetLibraryManagerByIdResponseModel(Boolean success, String error, String message, LibraryManagerByIdDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
-    public static class DataObj{
+    public static class LibraryManagerByIdDetailsData {
 
         @JsonProperty("username")
         private String username;
@@ -31,7 +31,7 @@ public class GetLibraryManagerByIdResponseModel extends BaseResponseModel {
         @JsonProperty("contact_number")
         private String contactNumber;
 
-        public DataObj(String username, String firstName, String lastName, String contactEmail, String contactNumber) {
+        public LibraryManagerByIdDetailsData(String username, String firstName, String lastName, String contactEmail, String contactNumber) {
             this.username = username;
             this.firstName = firstName;
             this.lastName = lastName;

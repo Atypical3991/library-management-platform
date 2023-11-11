@@ -1,7 +1,6 @@
 package com.example.library_management_platform.models.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,8 +29,11 @@ public class BookIssuance extends BaseEntity {
     private StatusEnum status;
 
     public enum StatusEnum{
-        ACTIVE,
-        IN_ACTIVE
+        REQUESTED,
+        APPROVED,
+        REJECTED,
+        DELIVERED,
+        RETURNED
     }
 
     @Override

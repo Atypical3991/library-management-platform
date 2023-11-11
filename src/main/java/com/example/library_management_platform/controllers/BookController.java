@@ -4,10 +4,14 @@ import com.example.library_management_platform.models.api.request.AddBookRequest
 import com.example.library_management_platform.models.api.response.BaseResponseModel;
 import com.example.library_management_platform.models.api.response.GetAllBooksResponseModel;
 import com.example.library_management_platform.services.BookManagerService;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,28 +26,37 @@ public class BookController {
     BookManagerService bookManagerService;
 
     @PostMapping("")
-    public BaseResponseModel addBook(@RequestBody @Valid AddBookRequestModel payload, BindingResult result) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
+    })
+    public ResponseEntity<BaseResponseModel> addBook(@RequestBody @Valid AddBookRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-            return new BaseResponseModel(false, String.join(", ", errors), "");
+            return ResponseEntity.badRequest().body(new BaseResponseModel(false, String.join(", ", errors), ""));
         }
         try {
             Boolean success = bookManagerService.addItem(payload);
-            return new BaseResponseModel(success, null, "Book added successfully");
+            return ResponseEntity.ok().body(new BaseResponseModel(success, null, "Book added successfully"));
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!! payload: {}", payload, e);
-            return new BaseResponseModel(false, "Something went wrong.", null);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
         }
     }
 
     @GetMapping("/get/all")
-    public BaseResponseModel getAllBooks() {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllBooksResponseModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllBooksResponseModel.class)))
+    })
+    public ResponseEntity<GetAllBooksResponseModel> getAllBooks() {
         try {
-            List<GetAllBooksResponseModel.DataObj.BookDetails> bookDetailsList = bookManagerService.getAllItemsWithoutSearchCriteria();
-            return new GetAllBooksResponseModel(true, null, "Woo hoo!! your book added successfully", new GetAllBooksResponseModel.DataObj(bookDetailsList.size(), bookDetailsList));
+            List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> allBookDetailsList = bookManagerService.getAllItemsWithoutSearchCriteria();
+            return ResponseEntity.ok().body(new GetAllBooksResponseModel(true, null, "Woo hoo!! your book added successfully", new GetAllBooksResponseModel.AllBookDetailsData(allBookDetailsList.size(), allBookDetailsList)));
         } catch (Exception e) {
             log.error("BookController, addBook exception raised!!", e);
-            return new GetAllBooksResponseModel(false, "Oops!! something went wrong.", null, null);
+            return ResponseEntity.internalServerError().body(new GetAllBooksResponseModel(false, "Oops!! something went wrong.", null, null));
         }
     }
 }

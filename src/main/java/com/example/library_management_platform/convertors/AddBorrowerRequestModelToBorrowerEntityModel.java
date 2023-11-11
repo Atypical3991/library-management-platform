@@ -2,6 +2,7 @@ package com.example.library_management_platform.convertors;
 
 import com.example.library_management_platform.models.api.request.AddBorrowerRequestModel;
 import com.example.library_management_platform.models.entities.Borrower;
+import com.example.library_management_platform.models.entities.User;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ public class AddBorrowerRequestModelToBorrowerEntityModel implements Converter<A
         borrower.setContactEmail(source.getContactEmail());
         borrower.setContactNumber(source.getContactNumber());
         borrower.setUsername(source.getUserName());
+        borrower.setRole(User.RoleEnum.borrower);
         return borrower;
     }
 }

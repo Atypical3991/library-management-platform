@@ -20,7 +20,7 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponseModel.GenreObj, GetBookGenreByIdResponseModel.GenreDetails, UpdateBookGenreRequestModel, AddBookGenreRequestModel,Object> {
+public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponseModel.AllGenreObj, GetBookGenreByIdResponseModel.BookGenreByIdDetails, UpdateBookGenreRequestModel, AddBookGenreRequestModel,Object> {
 
     @Autowired
     AddBookGenreRequestToBookGenreEntityModelConvertor addBookGenreRequestToBookGenreEntityModelConvertor;
@@ -32,12 +32,12 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
     BookGenreRepository bookGenreRepository;
 
     @Override
-    public List<GetAllBookGenresResponseModel.GenreObj> getAllItems(Object itemModel) {
+    public List<GetAllBookGenresResponseModel.AllGenreObj> getAllItems(Object itemModel) {
        throw new RuntimeException("Not implemented");
     }
 
     @Override
-    public List<GetAllBookGenresResponseModel.GenreObj> getAllItemsWithoutSearchCriteria() {
+    public List<GetAllBookGenresResponseModel.AllGenreObj> getAllItemsWithoutSearchCriteria() {
         Sort sort = Sort.by(Sort.Order.asc("createdAt"));
         int page = 0;
         int size  = 20;
@@ -49,11 +49,11 @@ public class BookGenreManagerService implements ItemManagerInterface<Long, GetAl
             genresList.addAll(bookGenreListByPage);
             page += 1;
         }
-        return genresList.stream().map(genre -> new GetAllBookGenresResponseModel.GenreObj(genre.getId(), genre.getName())).toList();
+        return genresList.stream().map(genre -> new GetAllBookGenresResponseModel.AllGenreObj(genre.getId(), genre.getName())).toList();
     }
 
     @Override
-    public GetBookGenreByIdResponseModel.GenreDetails getItemById(Long id) {
+    public GetBookGenreByIdResponseModel.BookGenreByIdDetails getItemById(Long id) {
         Optional<BookGenre> genreObj = bookGenreRepository.findById(id);
         if(genreObj.isEmpty()){
             throw  new RuntimeException("No genre found");

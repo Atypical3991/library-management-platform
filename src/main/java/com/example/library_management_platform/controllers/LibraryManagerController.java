@@ -2,9 +2,11 @@ package com.example.library_management_platform.controllers;
 
 import com.example.library_management_platform.models.api.request.AddLibraryManagerRequestModel;
 import com.example.library_management_platform.models.api.response.BaseResponseModel;
-import com.example.library_management_platform.models.api.response.BorrowerDetailsResponseModel;
 import com.example.library_management_platform.models.api.response.GetLibraryManagerByIdResponseModel;
 import com.example.library_management_platform.services.LibraryManagerService;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,12 @@ public class LibraryManagerController {
     LibraryManagerService libraryManagerService;
 
     @PostMapping("")
-    public BaseResponseModel createLibraryManager(@RequestBody @Valid  AddLibraryManagerRequestModel payload, BindingResult result){
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
+    })
+    public BaseResponseModel createLibraryManager(@RequestBody @Valid  AddLibraryManagerRequestModel payload, @RequestHeader(name = "x-admin-secret-key") String secretHeader,  BindingResult result){
         try{
             if(result.hasErrors()){
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
@@ -40,10 +47,14 @@ public class LibraryManagerController {
 
 
     @GetMapping("/{libraryManagerId}")
-    public BaseResponseModel getBorrower(@PathVariable long libraryManagerId){
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetLibraryManagerByIdResponseModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetLibraryManagerByIdResponseModel.class)))
+    })
+    public GetLibraryManagerByIdResponseModel getBorrower(@PathVariable long libraryManagerId){
         try{
-            GetLibraryManagerByIdResponseModel.DataObj dataObj = libraryManagerService.getUserById(libraryManagerId);
-            return new GetLibraryManagerByIdResponseModel(true,null,"Woo hoo!! your borrower details fetched successfully,",dataObj);
+            GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId);
+            return new GetLibraryManagerByIdResponseModel(true,null,"Woo hoo!! your borrower details fetched successfully,", libraryManagerByIdDetailsData);
         }catch (Exception e){
             log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",libraryManagerId,e);
             return new GetLibraryManagerByIdResponseModel(false,"Oops!! something went wrong.",null,null);}

@@ -2,9 +2,12 @@ package com.example.library_management_platform.controllers;
 
 
 import com.example.library_management_platform.models.api.request.LoginRequestModel;
-import com.example.library_management_platform.models.api.response.BaseResponseModel;
 import com.example.library_management_platform.models.api.response.LoginResponseModelModel;
+import com.example.library_management_platform.repositories.SessionsRepository;
 import com.example.library_management_platform.services.BorrowerLoginLogoutService;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +28,16 @@ public class BorrowerLoginLogoutController {
     @Autowired
     BorrowerLoginLogoutService borrowerLoginLogoutService;
 
+    @Autowired
+    SessionsRepository sessionsRepository;
+
     @PostMapping("/login")
-    public BaseResponseModel login(@RequestBody @Valid LoginRequestModel loginRequestModel, BindingResult result){
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
+    })
+    public LoginResponseModelModel login(@RequestBody @Valid LoginRequestModel loginRequestModel, BindingResult result){
         try{
             if(result.hasErrors()){
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
@@ -36,7 +47,8 @@ public class BorrowerLoginLogoutController {
             if(token == null){
                 return new LoginResponseModelModel(false, "Oops!! token generation failed.", null,null);
             }
-            return new LoginResponseModelModel(false, null, "Woo hoo!! your token generated successfully.", new LoginResponseModelModel.DataObj(token));
+
+            return new LoginResponseModelModel(false, null, "Woo hoo!! your token generated successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token));
 
         }catch ( Exception e){
             log.error("BorrowerLoginLogoutController, login exception raised!! payload: {}",loginRequestModel,e);

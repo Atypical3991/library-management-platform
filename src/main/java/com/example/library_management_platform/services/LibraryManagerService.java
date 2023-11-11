@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class LibraryManagerService implements UserManagerInterface<Long,AddLibraryManagerRequestModel,Object, GetLibraryManagerByIdResponseModel.DataObj> {
+public class LibraryManagerService implements UserManagerInterface<Long,AddLibraryManagerRequestModel,Object, GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData> {
 
     @Autowired
     AddLibraryManagerRequestModelToLibraryManagerEntityConvertor addLibraryManagerRequestModelToLibraryManagerEntityConvertor;
@@ -50,7 +50,7 @@ public class LibraryManagerService implements UserManagerInterface<Long,AddLibra
     }
 
     @Override
-    public GetLibraryManagerByIdResponseModel.DataObj getUserById(Long id) {
+    public GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData getUserById(Long id) {
         try{
             Optional<LibraryManager> libraryManager = libraryManagerRepository.findById(id);
             if(libraryManager.isEmpty()){

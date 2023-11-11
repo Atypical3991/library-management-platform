@@ -4,9 +4,9 @@ import com.example.library_management_platform.models.api.response.GetAllBookGen
 import com.example.library_management_platform.models.entities.BookGenre;
 import org.springframework.core.convert.converter.Converter;
 
-public class BookGenreEntityModelToGetAllBookGenresGenreObjConvertor implements Converter<BookGenre, GetAllBookGenresResponseModel.GenreObj> {
+public class BookGenreEntityModelToGetAllBookGenresGenreObjConvertor implements Converter<BookGenre, GetAllBookGenresResponseModel.AllGenreObj> {
     @Override
-    public GetAllBookGenresResponseModel.GenreObj convert(BookGenre source) {
-        return new GetAllBookGenresResponseModel.GenreObj(source.getId(),source.getName());
+    public GetAllBookGenresResponseModel.AllGenreObj convert(BookGenre source) {
+        return new GetAllBookGenresResponseModel.AllGenreObj(source.getId(),source.getName());
     }
 }

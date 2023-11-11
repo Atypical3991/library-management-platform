@@ -14,7 +14,7 @@ import lombok.Data;
         @UniqueConstraint(columnNames = "contact_number"),
         @UniqueConstraint(columnNames = "username")
 })
-public class LibraryManager extends BaseEntity{
+public class LibraryManager extends User{
 
     @Column(name = "username")
     private String username;

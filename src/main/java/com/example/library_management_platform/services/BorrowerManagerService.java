@@ -3,7 +3,7 @@ package com.example.library_management_platform.services;
 import com.example.library_management_platform.convertors.AddBorrowerRequestModelToBorrowerEntityModel;
 import com.example.library_management_platform.convertors.BorrowerEntityModelToBorrowerDetailsResponseDataObjConvertor;
 import com.example.library_management_platform.models.api.request.AddBorrowerRequestModel;
-import com.example.library_management_platform.models.api.response.BorrowerDetailsResponseModel;
+import com.example.library_management_platform.models.api.response.GetBorrowerDetailsResponseModel;
 import com.example.library_management_platform.models.entities.Borrower;
 import com.example.library_management_platform.repositories.BorrowerRepository;
 import com.example.library_management_platform.services.interfaces.UserManagerInterface;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 
 @Service
-public class BorrowerManagerService implements UserManagerInterface<Long, AddBorrowerRequestModel, Object, BorrowerDetailsResponseModel.DataObj> {
+public class BorrowerManagerService implements UserManagerInterface<Long, AddBorrowerRequestModel, Object, GetBorrowerDetailsResponseModel.BorrowerDetails> {
 
     @Autowired
     BorrowerRepository borrowerRepository;
@@ -43,7 +43,7 @@ public class BorrowerManagerService implements UserManagerInterface<Long, AddBor
     }
 
     @Override
-    public  BorrowerDetailsResponseModel.DataObj getUserById(Long borrowerId) {
+    public GetBorrowerDetailsResponseModel.BorrowerDetails getUserById(Long borrowerId) {
         Optional<Borrower> borrower=  borrowerRepository.findById(borrowerId);
         return borrowerEntityModelToBorrowerDetailsResponseDataObjConvertor.convert(borrower.get());
     }

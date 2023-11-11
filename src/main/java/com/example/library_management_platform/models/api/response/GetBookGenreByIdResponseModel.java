@@ -5,37 +5,35 @@ import lombok.Data;
 
 public class GetBookGenreByIdResponseModel extends BaseResponseModel {
     @JsonProperty("data")
-    private DataObj data;
+    private BookGenreByIdDetailsData data;
 
-    public GetBookGenreByIdResponseModel(Boolean success, String error, String message, DataObj data) {
+    public GetBookGenreByIdResponseModel(Boolean success, String error, String message, BookGenreByIdDetailsData data) {
         super(success, error, message);
         this.data = data;
     }
 
     @Data
-    public static class DataObj{
+    public static class BookGenreByIdDetailsData {
 
         @JsonProperty("genre")
-        private GenreDetails genre;
+        private BookGenreByIdDetails genre;
 
-        public DataObj(GenreDetails genre) {
+        public BookGenreByIdDetailsData(BookGenreByIdDetails genre) {
             this.genre = genre;
         }
     }
 
     @Data
-    public static class GenreDetails{
+    public static class BookGenreByIdDetails {
         @JsonProperty("id")
         private Long id;
         @JsonProperty("name")
         private String name;
 
-        public GenreDetails(Long id, String name) {
+        public BookGenreByIdDetails(Long id, String name) {
             this.id = id;
             this.name = name;
         }
-//        private List<Book> books;
-//        private List<Author> authors;
     }
 
 
