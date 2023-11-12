@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
+//BookManagerService :- A service to manage Books
 @Service
 @Slf4j
 public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object, AddBookRequestModel> {

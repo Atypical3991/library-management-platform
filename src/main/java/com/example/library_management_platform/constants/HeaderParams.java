@@ -1,7 +1,7 @@
 package com.example.library_management_platform.constants;
 
 
-// Commonly used Headers constants
+// Commonly used Header params
 public class HeaderParams {
 
     // Authorization header param name

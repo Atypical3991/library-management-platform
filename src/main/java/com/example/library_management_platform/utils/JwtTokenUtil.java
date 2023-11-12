@@ -18,7 +18,7 @@ public class JwtTokenUtil {
         return new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
 
-
+    //generateJwt :- A method to generate Jwt tokens
     public static String generateJwt(Map<String, Object> claims) {
         Key SIGNING_KEY = getSigningKey();
 
@@ -33,6 +33,7 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    //parseJwt :- A method to parse Jwt tokens and extract claims
     public static Claims parseJwt(String token) {
         Key SIGNING_KEY = getSigningKey();
         try {
@@ -43,8 +44,9 @@ public class JwtTokenUtil {
                     .getBody();
             return claims;
         } catch (Exception e) {
+            // Token is invalid or expired
             log.error("JwtTokenUtil, exception raised!!", e);
-            return null; // Token is invalid or expired
+            return null;
         }
     }
 }

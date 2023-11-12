@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
-
+//LibraryManagerService :- A service to manage Library Manager
 @Service
 @Slf4j
 public class LibraryManagerService implements UserManagerInterface<Long, AddLibraryManagerRequestModel, Object, GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData> {

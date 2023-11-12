@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+//BookGenreManagerService :- A service to manage Genres
 @Service
 @Slf4j
 public class BookGenreManagerService implements ItemManagerInterface<Long, GetAllBookGenresResponseModel.AllGenreObj, GetBookGenreByIdResponseModel.BookGenreByIdDetails, UpdateBookGenreRequestModel, AddBookGenreRequestModel> {

@@ -9,6 +9,7 @@ import com.example.library_management_platform.models.entities.User;
 import com.example.library_management_platform.repositories.BorrowerRepository;
 import com.example.library_management_platform.services.interfaces.UserManagerInterface;
 import com.example.library_management_platform.utils.JwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,9 @@ import java.util.Map;
 import java.util.Optional;
 
 
+//BorrowerManagerService :- A service to manage Borrowers
 @Service
+@Slf4j
 public class BorrowerManagerService implements UserManagerInterface<Long, AddBorrowerRequestModel, Object, GetBorrowerDetailsResponseModel.BorrowerDetails> {
 
     @Autowired

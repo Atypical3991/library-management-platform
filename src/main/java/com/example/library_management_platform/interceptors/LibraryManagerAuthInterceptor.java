@@ -35,24 +35,28 @@ public class LibraryManagerAuthInterceptor implements HandlerInterceptor, Applic
         if (authorizationToken == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing auth token.");
         }
+
+        // Checking whether an active Sessions exist with the passed token or not.
         Sessions session = this.applicationContext.getBean(SessionsRepository.class).findTopByToken(authorizationToken);
         if (session == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
+            // Throwing exception in case of no active Sessions.
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token not active.");
         }
+
         Claims claims = JwtTokenUtil.parseJwt(authorizationToken);
         if (claims == null) {
+            // Throwing exception on Invalid or Expired token
+            // Also deleting Sessions if present any
             this.applicationContext.getBean(SessionsRepository.class).deleteSessionsByToken(authorizationToken);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token expired.");
         }
+
         String username = (String) claims.get("username");
         String role = (String) claims.get("role");
+
+        // Role inside Claims must `library_manager` type.
         if (username == null || role == null || !role.equals(User.RoleEnum.library_manager.name())) {
-            log.error("LibraryManagerAuthInterceptor, preHandle invalid token!!");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid token!");
-            response.getWriter().flush();
-            response.getWriter().close();
-            return false;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token not acceptable.");
         }
         request.setAttribute("username", username);
         return true;

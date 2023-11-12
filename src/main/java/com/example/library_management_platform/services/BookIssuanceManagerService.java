@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+//BookIssuanceManagerService :- A service to manage Issuance
 @Service
 @Slf4j
 public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceRequestModel, Object, GetAllIssuanceResponseModel.AllIssuanceObj, BookIssuance.StatusEnum, BookIssuance> {

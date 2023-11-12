@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+//BookManagerService :- A service to manage Borrower's login & logout functionality
 @Service
 @Slf4j
 public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginRequestModel> {
