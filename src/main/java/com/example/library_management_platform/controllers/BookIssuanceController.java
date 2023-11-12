@@ -19,8 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -61,13 +60,8 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
+    public ResponseEntity<BaseResponseModel> issueBook(@RequestBody @Valid CreateBookIssuanceRequestModel payload, @RequestHeader String Authorization) {
         try {
-            if (result.hasErrors()) {
-                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-                return new BaseResponseModel(false, String.join(", ", errors), "");
-            }
-
             BookIssuance bookIssuance = bookIssuanceManagerService.createIssuance(payload);
 
             if (bookIssuance == null) {
@@ -82,7 +76,7 @@ public class BookIssuanceController {
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false, "Membership not found!!", null);
+                return ResponseEntity.badRequest().body(new BaseResponseModel(false, "Membership not found!!", null));
             }
 
             if (borrower.getLibraryMembership().getExpiryDate().before(new Date())) {
@@ -93,7 +87,7 @@ public class BookIssuanceController {
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false, "Membership expired!!", null);
+                return ResponseEntity.badRequest().body(new BaseResponseModel(false, "Membership expired!!", null));
             }
 
             if (borrower.getLibraryMembership().getBooksCount() == 5) {
@@ -101,7 +95,7 @@ public class BookIssuanceController {
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false, "More than 5 books can't be issued at a time!!", null);
+                return ResponseEntity.badRequest().body(new BaseResponseModel(false, "More than 5 books can't be issued at a time!!", null));
             }
 
             bookOpt.get().setStatus(Book.StatusEnum.IN_ACTIVE);
@@ -112,11 +106,11 @@ public class BookIssuanceController {
             libraryMembership.setBooksCount(libraryMembership.getBooksCount() + 1);
             libraryMembershipRepository.save(libraryMembership);
 
-            return new BaseResponseModel(true, null, "Book issued successfully");
+            return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Book issued successfully"));
 
         } catch (Exception e) {
             log.error("BookIssuanceController, issueBook exception raised!! payload: {}", payload, e);
-            return new BaseResponseModel(false, "Something went wrong!!", null);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong!!", null));
         }
     }
 
@@ -126,12 +120,8 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel updateIssuance(@RequestBody @Valid UpdateIssuanceRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
+    public ResponseEntity<BaseResponseModel> updateIssuance(@RequestBody @Valid UpdateIssuanceRequestModel payload, @RequestHeader String Authorization) {
         try {
-            if (result.hasErrors()) {
-                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-                return new BaseResponseModel(false, String.join(", ", errors), "");
-            }
             Optional<BookIssuance> bookIssuanceOpt = bookIssuanceRepository.findById(payload.getIssuanceId());
             if (bookIssuanceOpt.isEmpty()) {
                 throw new RuntimeException("Issuance not found!!");
@@ -157,10 +147,10 @@ public class BookIssuanceController {
                 bookIssuanceOpt.get().setStatus(BookIssuance.StatusEnum.DELIVERED);
                 bookIssuanceRepository.save(bookIssuanceOpt.get());
             }
-            return new BaseResponseModel(true, null, "Successfully updated.");
+            return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Successfully updated."));
         } catch (Exception e) {
             log.error("BookIssuanceController, updateIssuance exception raised!! payload: {}", payload, e);
-            return new BaseResponseModel(false, "Something went wrong!!", null);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong!!", null));
         }
     }
 
@@ -169,12 +159,12 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class)))
     })
-    public GetAllIssuanceResponseModel getAllActiveIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization) {
+    public ResponseEntity<GetAllIssuanceResponseModel> getAllActiveIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization) {
         try {
-            return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.AllIssuanceDetailsData(bookIssuanceManagerService.getAllIssuance(statusEnum)));
+            return ResponseEntity.ok().body(new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.AllIssuanceDetailsData(bookIssuanceManagerService.getAllIssuance(statusEnum))));
         } catch (Exception e) {
             log.error("BookIssuanceController, getAllActiveIssuance exception raised!!", e);
-            return new GetAllIssuanceResponseModel(false, "Something went wrong!!", null, null);
+            return ResponseEntity.internalServerError().body(new GetAllIssuanceResponseModel(false, "Something went wrong!!", null, null));
         }
     }
 }

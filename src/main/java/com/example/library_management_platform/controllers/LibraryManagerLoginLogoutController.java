@@ -11,11 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/library/managers")
@@ -34,20 +31,16 @@ public class LibraryManagerLoginLogoutController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
     })
-    public LoginResponseModelModel login(@RequestBody @Valid LoginRequestModel loginRequestModel, BindingResult result) {
+    public ResponseEntity<LoginResponseModelModel> login(@RequestBody @Valid LoginRequestModel loginRequestModel) {
         try {
-            if (result.hasErrors()) {
-                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-                return new LoginResponseModelModel(false, String.join(", ", errors), "", null);
-            }
             String token = libraryManagerLoginLogoutService.login(loginRequestModel);
             if (token == null) {
-                return new LoginResponseModelModel(false, "Token generation failed.", "", null);
+                return ResponseEntity.internalServerError().body(new LoginResponseModelModel(false, "Token generation failed.", "", null));
             }
-            return new LoginResponseModelModel(true, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token));
+            return ResponseEntity.ok().body(new LoginResponseModelModel(true, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token)));
         } catch (Exception e) {
             log.error("LibraryManagerLoginLogoutController, login exception raised!! payload: {}", loginRequestModel, e);
-            return new LoginResponseModelModel(false, "Something went wrong.", "", null);
+            return ResponseEntity.internalServerError().body(new LoginResponseModelModel(false, "Something went wrong.", "", null));
         }
     }
 
@@ -56,14 +49,14 @@ public class LibraryManagerLoginLogoutController {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
     })
-    public BaseResponseModel logout(@RequestHeader String Authorization) {
+    public ResponseEntity<BaseResponseModel> logout(@RequestHeader String Authorization) {
         //TODO:  add userId validation
         try {
             sessionsRepository.deleteSessionsByToken(Authorization);
-            return new BaseResponseModel(true, null, "Logged-out successfully");
+            return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Logged-out successfully"));
         } catch (Exception e) {
             log.error("LibraryManagerLoginLogoutController, logout exception raised!!", e);
-            return new BaseResponseModel(false, "Something went wrong.", null);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
         }
     }
 }

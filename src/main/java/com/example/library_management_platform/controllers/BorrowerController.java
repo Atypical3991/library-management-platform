@@ -13,11 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/borrowers")
@@ -36,17 +33,13 @@ public class BorrowerController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class)))
     })
-    public BaseResponseModel addBorrower(@RequestBody @Valid AddBorrowerRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
+    public ResponseEntity<BaseResponseModel> addBorrower(@RequestBody @Valid AddBorrowerRequestModel payload, @RequestHeader String Authorization) {
         try {
-            if (result.hasErrors()) {
-                List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
-                return new BaseResponseModel(false, String.join(", ", errors), "");
-            }
             borrowerManagerService.createUser(payload);
-            return new BaseResponseModel(true, "", "Borrower added successfully.");
+            return ResponseEntity.ok().body(new BaseResponseModel(true, "", "Borrower added successfully."));
         } catch (Exception e) {
             log.error("BorrowerController, addBorrower exception raised!! payload : {}", payload, e);
-            return new BaseResponseModel(false, "Something went wrong.", null);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
         }
     }
 
@@ -57,13 +50,13 @@ public class BorrowerController {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetBorrowerDetailsResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetBorrowerDetailsResponseModel.class)))
     })
-    public GetBorrowerDetailsResponseModel getBorrower(@PathVariable long borrowerId, @RequestHeader String Authorization) {
+    public ResponseEntity<GetBorrowerDetailsResponseModel> getBorrower(@PathVariable long borrowerId, @RequestHeader String Authorization) {
         try {
             GetBorrowerDetailsResponseModel.BorrowerDetails borrowerDetailsResponseBorrowerDetails = borrowerManagerService.getUserById(borrowerId, Authorization);
-            return new GetBorrowerDetailsResponseModel(true, null, "Borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails);
+            return ResponseEntity.ok().body(new GetBorrowerDetailsResponseModel(true, null, "Borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails));
         } catch (Exception e) {
             log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}", borrowerId, e);
-            return new GetBorrowerDetailsResponseModel(false, "Something went wrong.", null, null);
+            return ResponseEntity.internalServerError().body(new GetBorrowerDetailsResponseModel(false, "Something went wrong.", null, null));
         }
     }
 
