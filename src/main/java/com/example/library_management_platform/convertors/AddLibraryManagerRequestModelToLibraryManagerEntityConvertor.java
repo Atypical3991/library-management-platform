@@ -6,8 +6,6 @@ import com.example.library_management_platform.models.entities.User;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.management.relation.Role;
-
 @Component
 public class AddLibraryManagerRequestModelToLibraryManagerEntityConvertor implements Converter<AddLibraryManagerRequestModel, LibraryManager> {
     @Override

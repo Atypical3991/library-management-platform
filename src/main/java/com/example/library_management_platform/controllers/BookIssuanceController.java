@@ -61,47 +61,47 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceModel payload, @RequestHeader String Authorization, BindingResult result){
-        try{
-            if(result.hasErrors()){
+    public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceModel payload, @RequestHeader String Authorization, BindingResult result) {
+        try {
+            if (result.hasErrors()) {
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
 
             BookIssuance bookIssuance = bookIssuanceManagerService.createIssuance(payload);
 
-            if(bookIssuance == null){
-                throw  new RuntimeException("Something went wrong");
+            if (bookIssuance == null) {
+                throw new RuntimeException("Something went wrong");
             }
 
             Optional<Book> bookOpt = bookRepository.findById(bookIssuance.getBookId());
             Borrower borrower = bookIssuance.getBorrower();
 
-            if(borrower.getLibraryMembership() == null || borrower.getLibraryMembership().getBorrower().getStatus() == Borrower.StatusEnum.IN_ACTIVE){
+            if (borrower.getLibraryMembership() == null || borrower.getLibraryMembership().getBorrower().getStatus() == Borrower.StatusEnum.IN_ACTIVE) {
                 bookIssuance.setStatus(REJECTED);
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false,"Membership not found!!",null);
+                return new BaseResponseModel(false, "Membership not found!!", null);
             }
 
-            if(borrower.getLibraryMembership().getExpiryDate().before(new Date())){
-                LibraryMembership membership =  borrower.getLibraryMembership();
+            if (borrower.getLibraryMembership().getExpiryDate().before(new Date())) {
+                LibraryMembership membership = borrower.getLibraryMembership();
                 membership.setStatus(LibraryMembership.StatusEnum.IN_ACTIVE);
                 libraryMembershipRepository.save(membership);
                 bookIssuance.setStatus(REJECTED);
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false,"Membership expired!!",null);
+                return new BaseResponseModel(false, "Membership expired!!", null);
             }
 
-            if(borrower.getLibraryMembership().getBooksCount() == 5){
+            if (borrower.getLibraryMembership().getBooksCount() == 5) {
                 bookIssuance.setStatus(REJECTED);
                 bookIssuanceRepository.save(bookIssuance);
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                return new BaseResponseModel(false,"More than 5 books can't be issued at a time!!",null);
+                return new BaseResponseModel(false, "More than 5 books can't be issued at a time!!", null);
             }
 
             bookOpt.get().setStatus(Book.StatusEnum.IN_ACTIVE);
@@ -109,13 +109,13 @@ public class BookIssuanceController {
             bookIssuance.setStatus(BookIssuance.StatusEnum.APPROVED);
             bookIssuanceRepository.save(bookIssuance);
             LibraryMembership libraryMembership = borrower.getLibraryMembership();
-            libraryMembership.setBooksCount(libraryMembership.getBooksCount()+1);
+            libraryMembership.setBooksCount(libraryMembership.getBooksCount() + 1);
             libraryMembershipRepository.save(libraryMembership);
 
             return new BaseResponseModel(true, null, "Woo hoo!! book issued successfully");
 
-        }catch (Exception e){
-            log.error("BookIssuanceController, issueBook exception raised!! payload: {}",payload,e);
+        } catch (Exception e) {
+            log.error("BookIssuanceController, issueBook exception raised!! payload: {}", payload, e);
             return new BaseResponseModel(false, "Oops!! something went wrong!!", null);
         }
     }
@@ -126,56 +126,56 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel updateIssuance(@RequestBody @Valid UpdateIssuanceRequestModel payload, @RequestHeader String Authorization,  BindingResult result){
-        try{
-            if(result.hasErrors()){
+    public BaseResponseModel updateIssuance(@RequestBody @Valid UpdateIssuanceRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
+        try {
+            if (result.hasErrors()) {
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
-            Optional<BookIssuance> bookIssuanceOpt  =  bookIssuanceRepository.findById(payload.getIssuanceId()) ;
-            if(bookIssuanceOpt.isEmpty()){
+            Optional<BookIssuance> bookIssuanceOpt = bookIssuanceRepository.findById(payload.getIssuanceId());
+            if (bookIssuanceOpt.isEmpty()) {
                 throw new RuntimeException("Issuance not found!!");
             }
-            if(List.of(rejected,returned).contains(payload.getStatus())){
+            if (List.of(rejected, returned).contains(payload.getStatus())) {
                 Optional<Book> bookOpt = bookRepository.findById(bookIssuanceOpt.get().getBookId());
-                if(bookOpt.isEmpty()){
-                    throw  new RuntimeException("Oops!! Something went wrong");
+                if (bookOpt.isEmpty()) {
+                    throw new RuntimeException("Oops!! Something went wrong");
                 }
                 bookOpt.get().setStatus(Book.StatusEnum.ACTIVE);
                 bookRepository.save(bookOpt.get());
-                Borrower borrower =  bookIssuanceOpt.get().getBorrower();
+                Borrower borrower = bookIssuanceOpt.get().getBorrower();
                 LibraryMembership libraryMembership = borrower.getLibraryMembership();
-                libraryMembership.setBooksCount(libraryMembership.getBooksCount()-1);
+                libraryMembership.setBooksCount(libraryMembership.getBooksCount() - 1);
                 libraryMembershipRepository.save(libraryMembership);
-                if(payload.getStatus() == rejected){
+                if (payload.getStatus() == rejected) {
                     bookIssuanceOpt.get().setStatus(REJECTED);
-                }else{
+                } else {
                     bookIssuanceOpt.get().setStatus(RETURNED);
                 }
                 bookIssuanceRepository.save(bookIssuanceOpt.get());
-            }else{
+            } else {
                 bookIssuanceOpt.get().setStatus(BookIssuance.StatusEnum.DELIVERED);
                 bookIssuanceRepository.save(bookIssuanceOpt.get());
             }
             return new BaseResponseModel(true, null, "Woo hoo!! successfully updated.");
-        }catch (Exception e){
-            log.error("BookIssuanceController, updateIssuance exception raised!! payload: {}",payload,e);
+        } catch (Exception e) {
+            log.error("BookIssuanceController, updateIssuance exception raised!! payload: {}", payload, e);
             return new BaseResponseModel(false, "Oops!! something went wrong!!", null);
         }
     }
 
 
-    @GetMapping("/get_active_issuance")
+    @GetMapping("/active/all")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class)))
     })
-    public GetAllIssuanceResponseModel getAllIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization){
-        try{
-             return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.AllIssuanceDetailsData(bookIssuanceManagerService.getAllIssuance(statusEnum)));
-        }catch (Exception e){
-            log.error("BookIssuanceController, getAllIssuance exception raised!!",e);
-            return new GetAllIssuanceResponseModel(false, "Oops!! something went wrong!!", null,null);
+    public GetAllIssuanceResponseModel getAllIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization) {
+        try {
+            return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.AllIssuanceDetailsData(bookIssuanceManagerService.getAllIssuance(statusEnum)));
+        } catch (Exception e) {
+            log.error("BookIssuanceController, getAllIssuance exception raised!!", e);
+            return new GetAllIssuanceResponseModel(false, "Oops!! something went wrong!!", null, null);
         }
     }
 }

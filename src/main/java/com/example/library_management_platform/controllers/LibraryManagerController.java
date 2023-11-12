@@ -30,17 +30,17 @@ public class LibraryManagerController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel createLibraryManager(@RequestBody @Valid  AddLibraryManagerRequestModel payload, @RequestHeader(name = "x-admin-secret-key") String secretHeader,  BindingResult result){
-        try{
-            if(result.hasErrors()){
+    public BaseResponseModel createLibraryManager(@RequestBody @Valid AddLibraryManagerRequestModel payload, @RequestHeader(name = "x-admin-secret-key") String secretHeader, BindingResult result) {
+        try {
+            if (result.hasErrors()) {
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
-             libraryManagerService.createUser(payload);
-            return new BaseResponseModel(true,"","Congrats!! Library Manager added successfully.");
-        }catch (Exception e){
-            log.error("BorrowerController, addUser exception raised!! payload : {}",payload,e);
-            return new BaseResponseModel(false,"Oops!! something went wrong.",null);
+            libraryManagerService.createUser(payload);
+            return new BaseResponseModel(true, "", "Congrats!! Library Manager added successfully.");
+        } catch (Exception e) {
+            log.error("BorrowerController, addUser exception raised!! payload : {}", payload, e);
+            return new BaseResponseModel(false, "Oops!! something went wrong.", null);
 
         }
     }
@@ -51,12 +51,13 @@ public class LibraryManagerController {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetLibraryManagerByIdResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetLibraryManagerByIdResponseModel.class)))
     })
-    public GetLibraryManagerByIdResponseModel getBorrower(@PathVariable long libraryManagerId){
-        try{
-            GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId);
-            return new GetLibraryManagerByIdResponseModel(true,null,"Woo hoo!! your borrower details fetched successfully,", libraryManagerByIdDetailsData);
-        }catch (Exception e){
-            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}",libraryManagerId,e);
-            return new GetLibraryManagerByIdResponseModel(false,"Oops!! something went wrong.",null,null);}
+    public GetLibraryManagerByIdResponseModel getLibraryManager(@PathVariable long libraryManagerId, @RequestHeader String Authorization) {
+        try {
+            GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId, Authorization);
+            return new GetLibraryManagerByIdResponseModel(true, null, "Woo hoo!! your borrower details fetched successfully,", libraryManagerByIdDetailsData);
+        } catch (Exception e) {
+            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}", libraryManagerId, e);
+            return new GetLibraryManagerByIdResponseModel(false, "Oops!! something went wrong.", null, null);
+        }
     }
 }

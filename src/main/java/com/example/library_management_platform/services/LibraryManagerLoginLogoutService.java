@@ -26,25 +26,26 @@ public class LibraryManagerLoginLogoutService implements LoginLogoutInterface<Lo
 
     @Override
     public String login(LoginRequestModel loginRequestModel) {
-        try{
+        try {
             LibraryManager libraryManager = libraryManagerRepository.findTopByUsernameAndPassword(loginRequestModel.getUsername(), loginRequestModel.getPassword());
-            if(libraryManager == null) {
+            if (libraryManager == null) {
                 log.error("LibraryManagerLoginLogoutService, login library_manager not found. payload: {}", loginRequestModel);
                 return null;
             }
-            Map<String,Object> claims = new HashMap<>();
-            claims.put("username",libraryManager.getUsername());
-            claims.put("role",libraryManager.getRole());
+            sessionsRepository.deleteAllByUserIdAndRole(libraryManager.getId(), libraryManager.getRole());
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("username", libraryManager.getUsername());
+            claims.put("role", libraryManager.getRole());
             String token = JwtTokenUtil.generateJwt(claims);
-            if(token != null){
-                Sessions sessions =  new Sessions();
+            if (token != null) {
+                Sessions sessions = new Sessions();
                 sessions.setToken(token);
                 sessions.setUserId(libraryManager.getId());
                 sessionsRepository.save(sessions);
             }
             return token;
-        }catch (Exception e){
-            log.error("LibraryManagerLoginLogoutService, login exception raised!! payload: {}", loginRequestModel,e);
+        } catch (Exception e) {
+            log.error("LibraryManagerLoginLogoutService, login exception raised!! payload: {}", loginRequestModel, e);
             return null;
         }
     }

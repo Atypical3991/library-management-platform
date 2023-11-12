@@ -17,7 +17,7 @@ public abstract class BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)

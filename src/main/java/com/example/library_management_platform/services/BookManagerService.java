@@ -13,31 +13,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.HashSet;
 import java.util.List;
 
 
 @Service
 @Slf4j
-public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object,AddBookRequestModel,Object> {
+public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object, AddBookRequestModel> {
 
     @Autowired
     BookRepository bookRepository;
 
     @Autowired
-    BookGenreRepository  bookGenreRepository;
+    BookGenreRepository bookGenreRepository;
 
     @Autowired
     BookEntityModelToBookDetailsConvertor bookEntityModelToBookDetailsConvertor;
 
-
     @Override
-    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Object searchRequestModel) {
-        return null;
-    }
-
-    @Override
-    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItemsWithoutSearchCriteria() {
+    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Pageable pageable) {
         List<Book> bookList = bookRepository.findAll();
         return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
     }
@@ -58,7 +53,7 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
         book.setStatus(Book.StatusEnum.ACTIVE);
         book.setBookGenres(new HashSet<>(bookGenreList));
         bookRepository.save(book);
-        for(BookGenre genre : bookGenreList){
+        for (BookGenre genre : bookGenreList) {
             genre.getBooks().add(book);
             bookGenreRepository.save(genre);
         }
@@ -66,12 +61,19 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
     }
 
     @Override
-    public Boolean removeItem(Long o) {
-        return null;
+    public Boolean removeItem(Long bookId) {
+        try {
+            bookRepository.deleteById(bookId);
+            return true;
+        } catch (Exception e) {
+            log.error("BookManagerService, removeItem exception raised!! bookId : {}", bookId, e);
+            return false;
+        }
+
     }
 
     @Override
-    public Boolean updateItem( Object itemModel, Long id) {
+    public Boolean updateItem(Object itemModel, Long id) {
         return null;
     }
 

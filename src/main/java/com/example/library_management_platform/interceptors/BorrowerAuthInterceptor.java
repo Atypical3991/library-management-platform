@@ -1,6 +1,7 @@
 package com.example.library_management_platform.interceptors;
 
 import com.example.library_management_platform.constants.HeaderParams;
+import com.example.library_management_platform.models.entities.Sessions;
 import com.example.library_management_platform.models.entities.User;
 import com.example.library_management_platform.repositories.SessionsRepository;
 import com.example.library_management_platform.utils.JwtTokenUtil;
@@ -30,17 +31,21 @@ public class BorrowerAuthInterceptor implements HandlerInterceptor, ApplicationC
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorizationToken = request.getHeader(HeaderParams.AUTHORIZATION);
-        if(authorizationToken ==  null){
+        if (authorizationToken == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing auth token.");
         }
-        Claims claims  =   JwtTokenUtil.parseJwt(authorizationToken);
-        if(claims == null){
-            this.applicationContext.getBean(SessionsRepository.class).deleteByToken(authorizationToken);
+        Sessions session = this.applicationContext.getBean(SessionsRepository.class).findTopByToken(authorizationToken);
+        if (session == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
         }
-        String username =  (String)claims.get("username");
+        Claims claims = JwtTokenUtil.parseJwt(authorizationToken);
+        if (claims == null) {
+            this.applicationContext.getBean(SessionsRepository.class).deleteSessionsByToken(authorizationToken);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
+        }
+        String username = (String) claims.get("username");
         User.RoleEnum role = (User.RoleEnum) claims.get("role");
-        if(username == null || role != User.RoleEnum.borrower){
+        if (username == null || role != User.RoleEnum.borrower) {
             log.error("BorrowerAuthInterceptor, preHandle invalid token!!");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid token!");
@@ -48,7 +53,7 @@ public class BorrowerAuthInterceptor implements HandlerInterceptor, ApplicationC
             response.getWriter().close();
             return false;
         }
-        request.setAttribute("username",username);
+        request.setAttribute("username", username);
         return true;
     }
 

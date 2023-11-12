@@ -17,19 +17,19 @@ public class GetLibraryManagerByIdResponseModel extends BaseResponseModel {
     public static class LibraryManagerByIdDetailsData {
 
         @JsonProperty("username")
-        private String username;
+        private final String username;
 
         @JsonProperty("first_name")
-        private String firstName;
+        private final String firstName;
 
         @JsonProperty("last_name")
-        private String lastName;
+        private final String lastName;
 
         @JsonProperty("contact_email")
-        private String contactEmail;
+        private final String contactEmail;
 
         @JsonProperty("contact_number")
-        private String contactNumber;
+        private final String contactNumber;
 
         public LibraryManagerByIdDetailsData(String username, String firstName, String lastName, String contactEmail, String contactNumber) {
             this.username = username;

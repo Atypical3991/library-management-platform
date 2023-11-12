@@ -5,7 +5,7 @@ import lombok.Data;
 
 public class GetBookGenreByIdResponseModel extends BaseResponseModel {
     @JsonProperty("data")
-    private BookGenreByIdDetailsData data;
+    private final BookGenreByIdDetailsData data;
 
     public GetBookGenreByIdResponseModel(Boolean success, String error, String message, BookGenreByIdDetailsData data) {
         super(success, error, message);
@@ -35,8 +35,6 @@ public class GetBookGenreByIdResponseModel extends BaseResponseModel {
             this.name = name;
         }
     }
-
-
 
 
 }

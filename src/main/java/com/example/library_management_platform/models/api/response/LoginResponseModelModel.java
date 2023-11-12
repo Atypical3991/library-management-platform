@@ -16,7 +16,7 @@ public class LoginResponseModelModel extends BaseResponseModel {
 
     public static class LoginResponseDetailsData {
         @JsonProperty("token")
-        private String token;
+        private final String token;
 
         public LoginResponseDetailsData(String token) {
             this.token = token;

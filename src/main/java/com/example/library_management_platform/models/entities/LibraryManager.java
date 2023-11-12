@@ -14,7 +14,7 @@ import lombok.Data;
         @UniqueConstraint(columnNames = "contact_number"),
         @UniqueConstraint(columnNames = "username")
 })
-public class LibraryManager extends User{
+public class LibraryManager extends User {
 
     @Column(name = "username")
     private String username;
@@ -25,12 +25,12 @@ public class LibraryManager extends User{
     @Column(name = "first_name")
     private String firstName;
 
-    @Column(name= "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name="contact_email")
+    @Column(name = "contact_email")
     private String contactEmail;
 
-    @Column(name="contact_number")
+    @Column(name = "contact_number")
     private String contactNumber;
 }

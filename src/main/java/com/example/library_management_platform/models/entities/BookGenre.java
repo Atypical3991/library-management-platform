@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -15,13 +14,13 @@ import java.util.stream.Collectors;
 })
 public class BookGenre extends BaseEntity {
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="slug")
+    @Column(name = "slug")
     private String slug;
 
-    @Column(name="books")
+    @Column(name = "books")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "genre_book",
@@ -31,7 +30,7 @@ public class BookGenre extends BaseEntity {
     private List<Book> books;
 
     @Override
-    public String toString(){
+    public String toString() {
         return "BookGenre{" +
                 "id=" + this.getId() +
                 ", name='" + this.getName() + '\'' +

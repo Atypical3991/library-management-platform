@@ -16,7 +16,7 @@ public class AddBorrowerRequestModel {
     private String userName;
 
     @NotBlank(message = "password can't be empty")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",message = "Password should be: \n" +
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password should be: \n" +
             "At least one alphabet character (uppercase or lowercase).\n" +
             "At least one digit.\n" +
             "At least one special character from the set [@$!%*?&].\n" +
@@ -49,7 +49,7 @@ public class AddBorrowerRequestModel {
     private Borrower.GenderEnum gender;
 
     @NotBlank(message = "dob can't be empty")
-    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}$",message = "Please pass DOB in DD/MM/YYYY format")
+    @Pattern(regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}$", message = "Please pass DOB in DD/MM/YYYY format")
     @JsonProperty("dob")
     private String dob;
 

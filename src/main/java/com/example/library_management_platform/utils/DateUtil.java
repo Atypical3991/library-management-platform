@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class DateUtil {
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public static Date convertToDate(String dateStr) throws ParseException {
-       return sdf.parse(dateStr);
+        return sdf.parse(dateStr);
     }
 
 }

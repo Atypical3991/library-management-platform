@@ -15,5 +15,6 @@ public class BaseResponseModel {
         this.message = message;
     }
 
-    public BaseResponseModel() {}
+    public BaseResponseModel() {
+    }
 }

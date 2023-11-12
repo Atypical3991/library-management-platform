@@ -27,25 +27,25 @@ public class BorrowerLoginLogoutService implements LoginLogoutInterface<LoginReq
 
     @Override
     public String login(LoginRequestModel loginRequestModel) {
-        try{
+        try {
             Borrower borrower = borrowerRepository.findTopByUsernameAndPassword(loginRequestModel.getUsername(), loginRequestModel.getPassword());
-            if(borrower == null) {
+            if (borrower == null) {
                 log.error("BorrowerLoginService, login borrower not found. payload: {}", loginRequestModel);
                 return null;
             }
-            Map<String,Object> claims = new HashMap<>();
-            claims.put("username",borrower.getUsername());
-            claims.put("role",borrower.getRole());
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("username", borrower.getUsername());
+            claims.put("role", borrower.getRole());
             String token = JwtTokenUtil.generateJwt(claims);
-            if(token != null){
-                Sessions sessions =  new Sessions();
+            if (token != null) {
+                Sessions sessions = new Sessions();
                 sessions.setToken(token);
                 sessions.setUserId(borrower.getId());
                 sessionsRepository.save(sessions);
             }
             return token;
-        }catch (Exception e){
-            log.error("BorrowerLoginService, login exception raised!! payload: {}", loginRequestModel,e);
+        } catch (Exception e) {
+            log.error("BorrowerLoginService, login exception raised!! payload: {}", loginRequestModel, e);
             return null;
         }
     }

@@ -14,10 +14,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         // Borrower authentication interceptor
-        registry.addInterceptor(new BorrowerAuthInterceptor()).addPathPatterns("/api/books/get/*","/api/borrowers/get/*");
+        registry.addInterceptor(new BorrowerAuthInterceptor()).addPathPatterns("/api/books/all", "/api/genres/all", "/api/borrowers/*", "/api/issuance");
         registry.addInterceptor(new LibraryManagerAuthInterceptor()).addPathPatterns(
-                "/api/books","/api/genres","/api/genres/delete/*","/api/genres/update/*","/api/issuance","/api/issuance",
-                "/api/borrowers","/api/library/managers/*"
+                "/api/books", "/api/genres", "/api/books/delete/*", "/api/genres/delete/*", "/api/genres/update/*", "/api/issuance/update",
+                "/api/issuance/active/all", "/api/borrowers", "/api/library/managers/*"
         );
         registry.addInterceptor(new AdminAuthInterceptor()).addPathPatterns(
                 "/api/library/managers"

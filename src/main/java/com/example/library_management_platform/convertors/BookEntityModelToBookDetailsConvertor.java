@@ -14,8 +14,8 @@ public class BookEntityModelToBookDetailsConvertor implements Converter<Book, Ge
     @Override
     public GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails convert(Book source) {
 
-        List<String> genres  = new ArrayList<>();
-        for(BookGenre genre: source.getBookGenres()){
+        List<String> genres = new ArrayList<>();
+        for (BookGenre genre : source.getBookGenres()) {
             genres.add(genre.getName());
         }
         return new GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails(

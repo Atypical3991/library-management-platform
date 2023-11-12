@@ -20,10 +20,10 @@ public class GetAllBooksResponseModel extends BaseResponseModel {
     public static class AllBookDetailsData {
 
         @JsonProperty("count")
-        private Integer count;
+        private final Integer count;
 
         @JsonProperty("books")
-        private List<AllBookDetails> books;
+        private final List<AllBookDetails> books;
 
         public AllBookDetailsData(Integer count, List<AllBookDetails> books) {
             this.count = count;
