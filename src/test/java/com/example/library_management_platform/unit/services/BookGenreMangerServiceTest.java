@@ -1,24 +1,17 @@
-package com.example.library_management_platform.services;
+package com.example.library_management_platform.unit.services;
 
 
-import com.example.library_management_platform.config.TestModels;
-import com.example.library_management_platform.convertors.BookToAllBookDetailsConvertor;
+import com.example.library_management_platform.services.BookManagerService;
+import com.example.library_management_platform.unit.config.TestModels;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
-import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.models.entities.BookGenre;
 import com.example.library_management_platform.repositories.BookGenreRepository;
 import com.example.library_management_platform.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.List;
 

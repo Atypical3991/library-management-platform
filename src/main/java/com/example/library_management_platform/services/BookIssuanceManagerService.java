@@ -57,7 +57,10 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
     @Override
     public Boolean createIssuance(CreateBookIssuanceRequestModel issuance) {
         BookIssuance bookIssuance = processCreateIssuance(issuance);
-
+        if (bookIssuance == null) {
+            log.error("BookIssuance creation failed!! payload: {}", issuance);
+            return false;
+        }
 
         Optional<Book> bookOpt = bookRepository.findById(bookIssuance.getBookId());
         Borrower borrower = bookIssuance.getBorrower();

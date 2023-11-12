@@ -10,8 +10,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.Objects;
 
 @Component
 @Slf4j
@@ -27,10 +28,14 @@ public class CreateBookIssuanceModelToBookIssuanceConvertor implements Converter
             BookIssuance bookIssuance = new BookIssuance();
             bookIssuance.setBookId(source.getBookId());
             bookIssuance.setStatus(BookIssuance.StatusEnum.REQUESTED);
-            Date todayDate = new Date();
+            Date todayDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date startDate = DateUtil.convertToDate(source.getStartDate());
             Date endDate = DateUtil.convertToDate(source.getEndDate());
-            if ((!Objects.equals(startDate, todayDate) && startDate.before(todayDate)) || endDate.before(startDate) || endDate.equals(startDate)) {
+            System.out.println(startDate);
+            System.out.println(todayDate);
+            System.out.println(endDate);
+            System.out.println(startDate.before(todayDate));
+            if (startDate.before(todayDate) || endDate.before(startDate) || endDate.equals(startDate)) {
                 throw new UnsupportedOperationException("Start date should be greater than or equal today's date, and end date should be greater than start date.");
             }
             bookIssuance.setIssuedAt(startDate);
