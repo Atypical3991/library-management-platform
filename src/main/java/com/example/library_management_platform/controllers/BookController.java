@@ -11,12 +11,14 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/books")
@@ -51,28 +53,31 @@ public class BookController {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllBooksResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllBooksResponseModel.class)))
     })
-    public ResponseEntity<GetAllBooksResponseModel> getAllBooks(Pageable pageable) {
+    public ResponseEntity<Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails>> getAllBooks(Pageable pageable) {
         try {
-            List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> allBookDetailsList = bookManagerService.getAllItems(pageable);
-            return ResponseEntity.ok().body(new GetAllBooksResponseModel(true, null, "Woo hoo!! your book added successfully", new GetAllBooksResponseModel.AllBookDetailsData(allBookDetailsList.size(), allBookDetailsList)));
+            Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> allBookDetailsList = bookManagerService.getAllItems(pageable);
+            return ResponseEntity.ok().body(allBookDetailsList);
         } catch (Exception e) {
-            log.error("BookController, addBook exception raised!!", e);
-            return ResponseEntity.internalServerError().body(new GetAllBooksResponseModel(false, "Oops!! something went wrong.", null, null));
+            log.error("BookController, getAllBooks exception raised!!", e);
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
+    //TODO: add API for fetching single book details by Id
+    //TODO: add API for fetching books by Genre.
 
-    @DeleteMapping("/delete/{genreId}")
+    @DeleteMapping("/delete/{bookId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public ResponseEntity<BaseResponseModel> removeGenreById(@PathVariable long genreId, @RequestHeader String Authorization) {
+    public ResponseEntity<BaseResponseModel> removeBookById(@PathVariable long bookId, @RequestHeader String Authorization) {
         try {
-            Boolean success = bookManagerService.removeItem(genreId);
-            return ResponseEntity.ok().body(new BaseResponseModel(success, "Woo hoo!! your genre removed successfully", null));
+            Boolean success = bookManagerService.removeItem(bookId);
+            return ResponseEntity.ok().body(new BaseResponseModel(success, "book removed successfully", null));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Oops!! something went wrong", null));
+            log.error("BookController, removeBookById exception raised!! bookId : {} ", bookId, e);
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "something went wrong", null));
         }
     }
 }

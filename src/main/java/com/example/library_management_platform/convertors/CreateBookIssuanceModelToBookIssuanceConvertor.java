@@ -1,6 +1,6 @@
 package com.example.library_management_platform.convertors;
 
-import com.example.library_management_platform.models.api.request.CreateBookIssuanceModel;
+import com.example.library_management_platform.models.api.request.CreateBookIssuanceRequestModel;
 import com.example.library_management_platform.models.entities.BookIssuance;
 import com.example.library_management_platform.repositories.BorrowerRepository;
 import com.example.library_management_platform.utils.DateUtil;
@@ -11,17 +11,18 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 @Slf4j
-public class CreateBookIssuanceModelToBookIssuanceEntityModelConvertor implements Converter<CreateBookIssuanceModel, BookIssuance> {
+public class CreateBookIssuanceModelToBookIssuanceConvertor implements Converter<CreateBookIssuanceRequestModel, BookIssuance> {
 
     @Autowired
     BorrowerRepository borrowerRepository;
 
 
     @Override
-    public BookIssuance convert(CreateBookIssuanceModel source) {
+    public BookIssuance convert(CreateBookIssuanceRequestModel source) {
         try {
             BookIssuance bookIssuance = new BookIssuance();
             bookIssuance.setBookId(source.getBookId());
@@ -29,7 +30,7 @@ public class CreateBookIssuanceModelToBookIssuanceEntityModelConvertor implement
             Date todayDate = new Date();
             Date startDate = DateUtil.convertToDate(source.getStartDate());
             Date endDate = DateUtil.convertToDate(source.getEndDate());
-            if (startDate.before(todayDate) || endDate.before(startDate) || endDate.equals(startDate)) {
+            if ((!Objects.equals(startDate, todayDate) && startDate.before(todayDate)) || endDate.before(startDate) || endDate.equals(startDate)) {
                 throw new UnsupportedOperationException("Start date should be greater than or equal today's date, and end date should be greater than start date.");
             }
             bookIssuance.setIssuedAt(startDate);

@@ -1,7 +1,7 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.AddLibraryManagerRequestModelToLibraryManagerEntityConvertor;
-import com.example.library_management_platform.convertors.LibraryManagerEntityModelToGetLibraryManagerByIdResponseDataObjConvertor;
+import com.example.library_management_platform.convertors.AddLibraryManagerRequestModelToLibraryManagerConvertor;
+import com.example.library_management_platform.convertors.LibraryManagerToLibraryManagerByIdDetailsDataConvertor;
 import com.example.library_management_platform.models.api.request.AddLibraryManagerRequestModel;
 import com.example.library_management_platform.models.api.response.GetLibraryManagerByIdResponseModel;
 import com.example.library_management_platform.models.entities.LibraryManager;
@@ -22,10 +22,10 @@ import java.util.Optional;
 public class LibraryManagerService implements UserManagerInterface<Long, AddLibraryManagerRequestModel, Object, GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData> {
 
     @Autowired
-    AddLibraryManagerRequestModelToLibraryManagerEntityConvertor addLibraryManagerRequestModelToLibraryManagerEntityConvertor;
+    AddLibraryManagerRequestModelToLibraryManagerConvertor addLibraryManagerRequestModelToLibraryManagerConvertor;
 
     @Autowired
-    LibraryManagerEntityModelToGetLibraryManagerByIdResponseDataObjConvertor libraryManagerEntityModelToGetLibraryManagerByIdResponseDataObjConvertor;
+    LibraryManagerToLibraryManagerByIdDetailsDataConvertor libraryManagerToLibraryManagerByIdDetailsDataConvertor;
 
     @Autowired
     LibraryManagerRepository libraryManagerRepository;
@@ -33,7 +33,7 @@ public class LibraryManagerService implements UserManagerInterface<Long, AddLibr
     @Override
     public Boolean createUser(AddLibraryManagerRequestModel addLibraryManagerRequestModel) {
         try {
-            LibraryManager libraryManager = addLibraryManagerRequestModelToLibraryManagerEntityConvertor.convert(addLibraryManagerRequestModel);
+            LibraryManager libraryManager = addLibraryManagerRequestModelToLibraryManagerConvertor.convert(addLibraryManagerRequestModel);
             libraryManagerRepository.save(libraryManager);
             return true;
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class LibraryManagerService implements UserManagerInterface<Long, AddLibr
             if (claims.get("role") == null || (User.RoleEnum) claims.get("role") != User.RoleEnum.library_manager || claims.get("username") != libraryManager.get().getUsername()) {
                 throw new RuntimeException("User un-authorized!!");
             }
-            return libraryManagerEntityModelToGetLibraryManagerByIdResponseDataObjConvertor.convert(libraryManager.get());
+            return libraryManagerToLibraryManagerByIdDetailsDataConvertor.convert(libraryManager.get());
         } catch (Exception e) {
             log.error("LibraryManagerService, getUserById exception raised!! id: {}", id, e);
             return null;

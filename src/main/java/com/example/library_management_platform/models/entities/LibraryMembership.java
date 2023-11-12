@@ -2,10 +2,10 @@ package com.example.library_management_platform.models.entities;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Entity
@@ -26,7 +26,7 @@ public class LibraryMembership extends BaseEntity {
     private StatusEnum status;
 
     @Column(name = "booksCount")
-    @Positive(message = "Books count must be positive")
+    @PositiveOrZero(message = "Books count must be positive")
     private Integer booksCount = 0;
 
 

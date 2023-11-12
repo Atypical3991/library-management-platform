@@ -44,8 +44,8 @@ public class BorrowerAuthInterceptor implements HandlerInterceptor, ApplicationC
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
         }
         String username = (String) claims.get("username");
-        User.RoleEnum role = (User.RoleEnum) claims.get("role");
-        if (username == null || role != User.RoleEnum.borrower) {
+        String role = (String) claims.get("role");
+        if (username == null || role == null || !role.equals(User.RoleEnum.borrower.name())) {
             log.error("BorrowerAuthInterceptor, preHandle invalid token!!");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid token!");

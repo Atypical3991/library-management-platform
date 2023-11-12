@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class BookGenreEntityModelToBookGenreDetailsConvertor implements Converter<BookGenre, GetBookGenreByIdResponseModel.BookGenreByIdDetails> {
+public class BookGenreToBookGenreDetailsConvertor implements Converter<BookGenre, GetBookGenreByIdResponseModel.BookGenreByIdDetails> {
 
 
     @Override

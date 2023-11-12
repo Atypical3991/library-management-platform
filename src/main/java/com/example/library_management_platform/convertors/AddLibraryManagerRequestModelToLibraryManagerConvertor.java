@@ -7,7 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddLibraryManagerRequestModelToLibraryManagerEntityConvertor implements Converter<AddLibraryManagerRequestModel, LibraryManager> {
+public class AddLibraryManagerRequestModelToLibraryManagerConvertor implements Converter<AddLibraryManagerRequestModel, LibraryManager> {
     @Override
     public LibraryManager convert(AddLibraryManagerRequestModel source) {
         LibraryManager libraryManager = new LibraryManager();

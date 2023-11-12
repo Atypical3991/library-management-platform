@@ -1,6 +1,6 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.BookEntityModelToBookDetailsConvertor;
+import com.example.library_management_platform.convertors.BookToAllBookDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
 import com.example.library_management_platform.models.api.response.GetAllBooksResponseModel;
 import com.example.library_management_platform.models.entities.Book;
@@ -11,9 +11,11 @@ import com.example.library_management_platform.services.interfaces.ItemManagerIn
 import com.example.library_management_platform.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,12 +31,14 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
     BookGenreRepository bookGenreRepository;
 
     @Autowired
-    BookEntityModelToBookDetailsConvertor bookEntityModelToBookDetailsConvertor;
+    BookToAllBookDetailsConvertor bookToAllBookDetailsConvertor;
 
     @Override
-    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Pageable pageable) {
-        List<Book> bookList = bookRepository.findAll();
-        return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
+    public Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Pageable pageable) {
+        Page<Book> bookList = bookRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+        List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> bookDetailsList = bookList.stream().map(book -> bookToAllBookDetailsConvertor.convert(book)).toList();
+        return new PageImpl<>(bookDetailsList, (org.springframework.data.domain.Pageable) pageable, bookDetailsList.size());
+
     }
 
     @Override

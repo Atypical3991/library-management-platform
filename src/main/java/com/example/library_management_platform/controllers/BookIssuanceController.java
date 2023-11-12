@@ -1,7 +1,7 @@
 package com.example.library_management_platform.controllers;
 
-import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceEntityModelConvertor;
-import com.example.library_management_platform.models.api.request.CreateBookIssuanceModel;
+import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceConvertor;
+import com.example.library_management_platform.models.api.request.CreateBookIssuanceRequestModel;
 import com.example.library_management_platform.models.api.request.UpdateIssuanceRequestModel;
 import com.example.library_management_platform.models.api.response.BaseResponseModel;
 import com.example.library_management_platform.models.api.response.GetAllIssuanceResponseModel;
@@ -53,7 +53,7 @@ public class BookIssuanceController {
 
 
     @Autowired
-    CreateBookIssuanceModelToBookIssuanceEntityModelConvertor createBookIssuanceModelToBookIssuanceEntityModelConvertor;
+    CreateBookIssuanceModelToBookIssuanceConvertor createBookIssuanceModelToBookIssuanceConvertor;
 
     @PostMapping("")
     @ApiResponses(value = {
@@ -61,7 +61,7 @@ public class BookIssuanceController {
             @ApiResponse(responseCode = "200", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
-    public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceModel payload, @RequestHeader String Authorization, BindingResult result) {
+    public BaseResponseModel issueBook(@RequestBody @Valid CreateBookIssuanceRequestModel payload, @RequestHeader String Authorization, BindingResult result) {
         try {
             if (result.hasErrors()) {
                 List<String> errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
@@ -112,11 +112,11 @@ public class BookIssuanceController {
             libraryMembership.setBooksCount(libraryMembership.getBooksCount() + 1);
             libraryMembershipRepository.save(libraryMembership);
 
-            return new BaseResponseModel(true, null, "Woo hoo!! book issued successfully");
+            return new BaseResponseModel(true, null, "Book issued successfully");
 
         } catch (Exception e) {
             log.error("BookIssuanceController, issueBook exception raised!! payload: {}", payload, e);
-            return new BaseResponseModel(false, "Oops!! something went wrong!!", null);
+            return new BaseResponseModel(false, "Something went wrong!!", null);
         }
     }
 
@@ -157,25 +157,24 @@ public class BookIssuanceController {
                 bookIssuanceOpt.get().setStatus(BookIssuance.StatusEnum.DELIVERED);
                 bookIssuanceRepository.save(bookIssuanceOpt.get());
             }
-            return new BaseResponseModel(true, null, "Woo hoo!! successfully updated.");
+            return new BaseResponseModel(true, null, "Successfully updated.");
         } catch (Exception e) {
             log.error("BookIssuanceController, updateIssuance exception raised!! payload: {}", payload, e);
-            return new BaseResponseModel(false, "Oops!! something went wrong!!", null);
+            return new BaseResponseModel(false, "Something went wrong!!", null);
         }
     }
 
-
-    @GetMapping("/active/all")
+    @GetMapping("/all")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class)))
     })
-    public GetAllIssuanceResponseModel getAllIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization) {
+    public GetAllIssuanceResponseModel getAllActiveIssuance(@RequestParam BookIssuance.StatusEnum statusEnum, @RequestHeader String Authorization) {
         try {
             return new GetAllIssuanceResponseModel(true, null, null, new GetAllIssuanceResponseModel.AllIssuanceDetailsData(bookIssuanceManagerService.getAllIssuance(statusEnum)));
         } catch (Exception e) {
-            log.error("BookIssuanceController, getAllIssuance exception raised!!", e);
-            return new GetAllIssuanceResponseModel(false, "Oops!! something went wrong!!", null, null);
+            log.error("BookIssuanceController, getAllActiveIssuance exception raised!!", e);
+            return new GetAllIssuanceResponseModel(false, "Something went wrong!!", null, null);
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.example.library_management_platform.services.interfaces;
 
-import java.awt.print.Pageable;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ItemManagerInterface<T, K, L, M, N> {
-    List<K> getAllItems(Pageable pageable);
+    Page<K> getAllItems(Pageable pageable);
 
     L getItemById(T t);
 

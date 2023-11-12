@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class CreateBookIssuanceModel {
+public class CreateBookIssuanceRequestModel {
 
     @JsonProperty("bookId")
     private long bookId;

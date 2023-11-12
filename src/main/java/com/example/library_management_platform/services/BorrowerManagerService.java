@@ -1,7 +1,7 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.AddBorrowerRequestModelToBorrowerEntityModel;
-import com.example.library_management_platform.convertors.BorrowerEntityModelToBorrowerDetailsResponseDataObjConvertor;
+import com.example.library_management_platform.convertors.AddBorrowerRequestModelToBorrowerConvertor;
+import com.example.library_management_platform.convertors.BorrowerToBorrowerDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBorrowerRequestModel;
 import com.example.library_management_platform.models.api.response.GetBorrowerDetailsResponseModel;
 import com.example.library_management_platform.models.entities.Borrower;
@@ -23,14 +23,14 @@ public class BorrowerManagerService implements UserManagerInterface<Long, AddBor
     BorrowerRepository borrowerRepository;
 
     @Autowired
-    AddBorrowerRequestModelToBorrowerEntityModel addBorrowerRequestModelToBorrowerEntityModel;
+    AddBorrowerRequestModelToBorrowerConvertor addBorrowerRequestModelToBorrowerConvertor;
 
     @Autowired
-    BorrowerEntityModelToBorrowerDetailsResponseDataObjConvertor borrowerEntityModelToBorrowerDetailsResponseDataObjConvertor;
+    BorrowerToBorrowerDetailsConvertor borrowerToBorrowerDetailsConvertor;
 
     @Override
     public Boolean createUser(AddBorrowerRequestModel addBorrowerRequestModel) {
-        Borrower borrower = addBorrowerRequestModelToBorrowerEntityModel.convert(addBorrowerRequestModel);
+        Borrower borrower = addBorrowerRequestModelToBorrowerConvertor.convert(addBorrowerRequestModel);
         borrowerRepository.save(borrower);
         return true;
     }
@@ -55,7 +55,7 @@ public class BorrowerManagerService implements UserManagerInterface<Long, AddBor
         if (claims.get("role") == null || (User.RoleEnum) claims.get("role") != User.RoleEnum.borrower || (String) claims.get("username") != borrower.get().getUsername()) {
             throw new RuntimeException("User un-authorised!!");
         }
-        return borrowerEntityModelToBorrowerDetailsResponseDataObjConvertor.convert(borrower.get());
+        return borrowerToBorrowerDetailsConvertor.convert(borrower.get());
     }
 
 }

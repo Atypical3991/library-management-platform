@@ -42,12 +42,12 @@ public class LibraryManagerLoginLogoutController {
             }
             String token = libraryManagerLoginLogoutService.login(loginRequestModel);
             if (token == null) {
-                return new LoginResponseModelModel(false, "Oops!! token generation failed.", "", null);
+                return new LoginResponseModelModel(false, "Token generation failed.", "", null);
             }
-            return new LoginResponseModelModel(true, null, "Woo hoo!! Successfully logged in.", new LoginResponseModelModel.LoginResponseDetailsData(token));
+            return new LoginResponseModelModel(true, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token));
         } catch (Exception e) {
             log.error("LibraryManagerLoginLogoutController, login exception raised!! payload: {}", loginRequestModel, e);
-            return new LoginResponseModelModel(false, "Oops!! something went wrong.", "", null);
+            return new LoginResponseModelModel(false, "Something went wrong.", "", null);
         }
     }
 
@@ -57,12 +57,13 @@ public class LibraryManagerLoginLogoutController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
     })
     public BaseResponseModel logout(@RequestHeader String Authorization) {
+        //TODO:  add userId validation
         try {
             sessionsRepository.deleteSessionsByToken(Authorization);
-            return new BaseResponseModel(true, null, "You logged out.");
+            return new BaseResponseModel(true, null, "Logged-out successfully");
         } catch (Exception e) {
-            log.error("LibraryManagerLoginLogoutController, login exception raised!!", e);
-            return new BaseResponseModel(false, "Oops!! something went wrong.", null);
+            log.error("LibraryManagerLoginLogoutController, logout exception raised!!", e);
+            return new BaseResponseModel(false, "Something went wrong.", null);
         }
     }
 }

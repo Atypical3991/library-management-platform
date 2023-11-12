@@ -14,22 +14,23 @@ public class GetLibraryManagerByIdResponseModel extends BaseResponseModel {
         this.data = data;
     }
 
+    @Data
     public static class LibraryManagerByIdDetailsData {
 
         @JsonProperty("username")
-        private final String username;
+        private String username;
 
         @JsonProperty("first_name")
-        private final String firstName;
+        private String firstName;
 
         @JsonProperty("last_name")
-        private final String lastName;
+        private String lastName;
 
         @JsonProperty("contact_email")
-        private final String contactEmail;
+        private String contactEmail;
 
         @JsonProperty("contact_number")
-        private final String contactNumber;
+        private String contactNumber;
 
         public LibraryManagerByIdDetailsData(String username, String firstName, String lastName, String contactEmail, String contactNumber) {
             this.username = username;

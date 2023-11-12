@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-@Slf4j
 @Component
+@Slf4j
 public class LibraryManagerAuthInterceptor implements HandlerInterceptor, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -45,8 +45,8 @@ public class LibraryManagerAuthInterceptor implements HandlerInterceptor, Applic
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
         }
         String username = (String) claims.get("username");
-        User.RoleEnum role = (User.RoleEnum) claims.get("role");
-        if (username == null || role != User.RoleEnum.library_manager) {
+        String role = (String) claims.get("role");
+        if (username == null || role == null || !role.equals(User.RoleEnum.library_manager.name())) {
             log.error("LibraryManagerAuthInterceptor, preHandle invalid token!!");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid token!");

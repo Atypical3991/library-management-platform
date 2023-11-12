@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BookEntityModelToBookDetailsConvertor implements Converter<Book, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> {
+public class BookToAllBookDetailsConvertor implements Converter<Book, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> {
     @Override
     public GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails convert(Book source) {
 

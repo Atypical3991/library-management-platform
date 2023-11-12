@@ -37,10 +37,10 @@ public class LibraryManagerController {
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
             libraryManagerService.createUser(payload);
-            return new BaseResponseModel(true, "", "Congrats!! Library Manager added successfully.");
+            return new BaseResponseModel(true, "", "Library Manager added successfully.");
         } catch (Exception e) {
-            log.error("BorrowerController, addUser exception raised!! payload : {}", payload, e);
-            return new BaseResponseModel(false, "Oops!! something went wrong.", null);
+            log.error("LibraryManagerController, createLibraryManager exception raised!! payload : {}", payload, e);
+            return new BaseResponseModel(false, "Something went wrong.", null);
 
         }
     }
@@ -54,10 +54,10 @@ public class LibraryManagerController {
     public GetLibraryManagerByIdResponseModel getLibraryManager(@PathVariable long libraryManagerId, @RequestHeader String Authorization) {
         try {
             GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId, Authorization);
-            return new GetLibraryManagerByIdResponseModel(true, null, "Woo hoo!! your borrower details fetched successfully,", libraryManagerByIdDetailsData);
+            return new GetLibraryManagerByIdResponseModel(true, null, "Library Manager's details fetched successfully,", libraryManagerByIdDetailsData);
         } catch (Exception e) {
-            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}", libraryManagerId, e);
-            return new GetLibraryManagerByIdResponseModel(false, "Oops!! something went wrong.", null, null);
+            log.error("LibraryManagerController, getLibraryManager exception raised!! libraryManagerId:{}", libraryManagerId, e);
+            return new GetLibraryManagerByIdResponseModel(false, "Something went wrong.", null, null);
         }
     }
 }

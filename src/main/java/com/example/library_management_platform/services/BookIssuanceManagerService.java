@@ -1,8 +1,8 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.BookIssuanceEntityModelToIssuanceObjConvertor;
-import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceEntityModelConvertor;
-import com.example.library_management_platform.models.api.request.CreateBookIssuanceModel;
+import com.example.library_management_platform.convertors.BookIssuanceToAllIssuanceObjConvertor;
+import com.example.library_management_platform.convertors.CreateBookIssuanceModelToBookIssuanceConvertor;
+import com.example.library_management_platform.models.api.request.CreateBookIssuanceRequestModel;
 import com.example.library_management_platform.models.api.response.GetAllIssuanceResponseModel;
 import com.example.library_management_platform.models.entities.Book;
 import com.example.library_management_platform.models.entities.BookIssuance;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceModel, Object, GetAllIssuanceResponseModel.AllIssuanceObj, BookIssuance.StatusEnum, BookIssuance> {
+public class BookIssuanceManagerService implements IssuanceManagerInterface<Long, CreateBookIssuanceRequestModel, Object, GetAllIssuanceResponseModel.AllIssuanceObj, BookIssuance.StatusEnum, BookIssuance> {
 
     @Autowired
     BookIssuanceRepository bookIssuanceRepository;
@@ -36,14 +36,14 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
     BorrowerRepository borrowerRepository;
 
     @Autowired
-    CreateBookIssuanceModelToBookIssuanceEntityModelConvertor createBookIssuanceModelToBookIssuanceEntityModelConvertor;
+    CreateBookIssuanceModelToBookIssuanceConvertor createBookIssuanceModelToBookIssuanceConvertor;
 
     @Autowired
-    BookIssuanceEntityModelToIssuanceObjConvertor bookIssuanceEntityModelToIssuanceObjConvertor;
+    BookIssuanceToAllIssuanceObjConvertor bookIssuanceToAllIssuanceObjConvertor;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
-    public BookIssuance createIssuance(CreateBookIssuanceModel issuance) {
+    public BookIssuance createIssuance(CreateBookIssuanceRequestModel issuance) {
         Optional<Book> book = bookRepository.findById(issuance.getBookId());
         if (book.isEmpty() || book.get().getStatus() != Book.StatusEnum.ACTIVE) {
             throw new RuntimeException("Either bookId is invalid or book has already been issued");
@@ -53,7 +53,7 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
             throw new RuntimeException("Either Borrower not found or Borrower is not Active");
         }
 
-        BookIssuance bookIssuance = createBookIssuanceModelToBookIssuanceEntityModelConvertor.convert(issuance);
+        BookIssuance bookIssuance = createBookIssuanceModelToBookIssuanceConvertor.convert(issuance);
         if (bookIssuance == null) {
             log.error("BookIssuanceManagerService, createIssuance returned null BookIssuance model");
             return null;
@@ -77,6 +77,6 @@ public class BookIssuanceManagerService implements IssuanceManagerInterface<Long
 
     public List<GetAllIssuanceResponseModel.AllIssuanceObj> getAllIssuance(BookIssuance.StatusEnum statusEnum) {
         List<BookIssuance> bookIssuanceList = bookIssuanceRepository.findAllByStatus(statusEnum);
-        return bookIssuanceList.stream().map(bookIssuance -> bookIssuanceEntityModelToIssuanceObjConvertor.convert(bookIssuance)).toList();
+        return bookIssuanceList.stream().map(bookIssuance -> bookIssuanceToAllIssuanceObjConvertor.convert(bookIssuance)).toList();
     }
 }

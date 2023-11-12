@@ -43,12 +43,14 @@ public class BorrowerController {
                 return new BaseResponseModel(false, String.join(", ", errors), "");
             }
             borrowerManagerService.createUser(payload);
-            return new BaseResponseModel(true, "", "Woo hoo!! your borrower added successfully.");
+            return new BaseResponseModel(true, "", "Borrower added successfully.");
         } catch (Exception e) {
-            log.error("BorrowerController, addUser exception raised!! payload : {}", payload, e);
-            return new BaseResponseModel(false, "Oops!! something went wrong.", null);
+            log.error("BorrowerController, addBorrower exception raised!! payload : {}", payload, e);
+            return new BaseResponseModel(false, "Something went wrong.", null);
         }
     }
+
+    //TODO: add support for deactivation and reactivation of borrowers by Id.
 
     @GetMapping("/{borrowerId}")
     @ApiResponses(value = {
@@ -58,10 +60,11 @@ public class BorrowerController {
     public GetBorrowerDetailsResponseModel getBorrower(@PathVariable long borrowerId, @RequestHeader String Authorization) {
         try {
             GetBorrowerDetailsResponseModel.BorrowerDetails borrowerDetailsResponseBorrowerDetails = borrowerManagerService.getUserById(borrowerId, Authorization);
-            return new GetBorrowerDetailsResponseModel(true, null, "Woo hoo!! your borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails);
+            return new GetBorrowerDetailsResponseModel(true, null, "Borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails);
         } catch (Exception e) {
             log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}", borrowerId, e);
-            return new GetBorrowerDetailsResponseModel(false, "Oops!! something went wrong.", null, null);
+            return new GetBorrowerDetailsResponseModel(false, "Something went wrong.", null, null);
         }
     }
+
 }

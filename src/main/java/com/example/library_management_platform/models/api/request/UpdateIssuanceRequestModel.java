@@ -11,13 +11,14 @@ public class UpdateIssuanceRequestModel {
     private long issuanceId;
 
     @JsonProperty("status")
-    @Schema(allowableValues = "rejected, returned")
+    @Schema(allowableValues = "rejected, returned, delivered")
     private BookIssuanceStatusEnum status;
 
 
     public enum BookIssuanceStatusEnum {
         rejected,
-        returned
+        returned,
+        delivered
     }
 
 }

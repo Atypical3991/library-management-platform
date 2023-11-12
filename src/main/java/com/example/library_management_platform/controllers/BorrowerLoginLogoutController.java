@@ -43,14 +43,14 @@ public class BorrowerLoginLogoutController {
             }
             String token = borrowerLoginLogoutService.login(loginRequestModel);
             if (token == null) {
-                return new LoginResponseModelModel(false, "Oops!! token generation failed.", null, null);
+                return new LoginResponseModelModel(false, "Token generation failed.", null, null);
             }
 
-            return new LoginResponseModelModel(false, null, "Woo hoo!! your token generated successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token));
+            return new LoginResponseModelModel(false, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token));
 
         } catch (Exception e) {
             log.error("BorrowerLoginLogoutController, login exception raised!! payload: {}", loginRequestModel, e);
-            return new LoginResponseModelModel(false, "Oops!! something went wrong.", null, null);
+            return new LoginResponseModelModel(false, "Something went wrong.", null, null);
         }
     }
 
@@ -61,10 +61,11 @@ public class BorrowerLoginLogoutController {
     })
     public BaseResponseModel logout(@RequestHeader String Authorization) {
         try {
+            // TODO: add validation on userID
             sessionsRepository.deleteSessionsByToken(Authorization);
-            return new BaseResponseModel(true, null, "You logged out.");
+            return new BaseResponseModel(true, null, "logged out successfully");
         } catch (Exception e) {
-            log.error("LibraryManagerLoginLogoutController, login exception raised!!", e);
+            log.error("LibraryManagerLoginLogoutController, logout exception raised!!", e);
             return new BaseResponseModel(false, "Oops!! something went wrong.", null);
         }
     }
