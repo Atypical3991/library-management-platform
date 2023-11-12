@@ -1,6 +1,7 @@
 package com.example.library_management_platform.interceptors;
 
 import com.example.library_management_platform.constants.HeaderParams;
+import com.example.library_management_platform.models.entities.Sessions;
 import com.example.library_management_platform.models.entities.User;
 import com.example.library_management_platform.repositories.SessionsRepository;
 import com.example.library_management_platform.utils.JwtTokenUtil;
@@ -30,25 +31,33 @@ public class BorrowerAuthInterceptor implements HandlerInterceptor, ApplicationC
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorizationToken = request.getHeader(HeaderParams.AUTHORIZATION);
-        if(authorizationToken ==  null){
+        if (authorizationToken == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing auth token.");
         }
-        Claims claims  =   JwtTokenUtil.parseJwt(authorizationToken);
-        if(claims == null){
-            this.applicationContext.getBean(SessionsRepository.class).deleteByToken(authorizationToken);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid auth token.");
+
+        // Checking whether an active Sessions exist with the passed token or not.
+        Sessions session = this.applicationContext.getBean(SessionsRepository.class).findTopByToken(authorizationToken);
+        if (session == null) {
+            // Throwing exception in case of no active Sessions.
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token not active.");
         }
-        String username =  (String)claims.get("username");
-        User.RoleEnum role = (User.RoleEnum) claims.get("role");
-        if(username == null || role != User.RoleEnum.borrower){
-            log.error("BorrowerAuthInterceptor, preHandle invalid token!!");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid token!");
-            response.getWriter().flush();
-            response.getWriter().close();
-            return false;
+
+        Claims claims = JwtTokenUtil.parseJwt(authorizationToken);
+        if (claims == null) {
+            // Throwing exception on Invalid or Expired token
+            // Also deleting Sessions if present any
+            this.applicationContext.getBean(SessionsRepository.class).deleteSessionsByToken(authorizationToken);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token expired.");
         }
-        request.setAttribute("username",username);
+
+        String username = (String) claims.get("username");
+        String role = (String) claims.get("role");
+
+        // Role inside Claims must `borrower` type.
+        if (username == null || role == null || !role.equals(User.RoleEnum.borrower.name())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token not acceptable.");
+        }
+        request.setAttribute("username", username);
         return true;
     }
 

@@ -14,7 +14,7 @@ public class AddLibraryManagerRequestModel {
     private String userName;
 
     @NotBlank(message = "password can't be empty")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",message = "Password should be: \n" +
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password should be: \n" +
             "At least one alphabet character (uppercase or lowercase).\n" +
             "At least one digit.\n" +
             "At least one special character from the set [@$!%*?&].\n" +

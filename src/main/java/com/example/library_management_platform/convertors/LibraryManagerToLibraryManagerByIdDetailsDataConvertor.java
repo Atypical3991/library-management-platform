@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LibraryManagerEntityModelToGetLibraryManagerByIdResponseDataObjConvertor implements Converter<LibraryManager, GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData> {
+public class LibraryManagerToLibraryManagerByIdDetailsDataConvertor implements Converter<LibraryManager, GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData> {
 
     @Override
     public GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData convert(LibraryManager source) {

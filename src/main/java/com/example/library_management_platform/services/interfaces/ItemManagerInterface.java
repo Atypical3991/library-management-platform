@@ -1,14 +1,17 @@
 package com.example.library_management_platform.services.interfaces;
 
-import java.util.List;
-import java.util.Objects;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface ItemManagerInterface<T,K,L,M,N,O>{
-    List<K> getAllItems(O itemSearchModel);
-    List<K> getAllItemsWithoutSearchCriteria();
+//ItemManagerInterface :- An interface for classes responsible for Items management for e.g.  BookGenreManagerService
+public interface ItemManagerInterface<T, K, L, M, N> {
+    Page<K> getAllItems(Pageable pageable);
 
     L getItemById(T t);
-    Boolean addItem( N itemModel);
+
+    Boolean addItem(N itemModel);
+
     Boolean removeItem(T t);
+
     Boolean updateItem(M itemUpdateModel, T id);
 }

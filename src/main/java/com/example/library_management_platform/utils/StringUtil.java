@@ -2,6 +2,7 @@ package com.example.library_management_platform.utils;
 
 public class StringUtil {
 
+    //convertToSlug :- A method to convert Strings to its Slug
     public static String convertToSlug(String input) {
         if (input == null) {
             return "";

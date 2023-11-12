@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -15,7 +14,7 @@ import java.util.Set;
 @Table(name = "book", uniqueConstraints = {
         @UniqueConstraint(columnNames = "slug")
 })
-public class Book  extends BaseEntity {
+public class Book extends BaseEntity {
 
     @Column(name = "name")
     private String name;
@@ -36,19 +35,19 @@ public class Book  extends BaseEntity {
     @Column(name = "publisher")
     private String publisher;
 
-    public enum StatusEnum {
-        ISSUANCE_REQUESTED,
-        ACTIVE,
-        IN_ACTIVE
-    }
-
     @Override
-    public String toString(){
-        return  "Book{" +
+    public String toString() {
+        return "Book{" +
                 "id=" + this.getId() +
                 ", name='" + this.getName() + '\'' +
                 ",  genres=" + this.getBookGenres().stream().map(BookGenre::getName).toList() +
                 '}';
+    }
+
+    public enum StatusEnum {
+        ISSUANCE_REQUESTED,
+        ACTIVE,
+        IN_ACTIVE
     }
 
 }

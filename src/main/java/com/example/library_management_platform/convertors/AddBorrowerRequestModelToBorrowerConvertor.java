@@ -7,10 +7,10 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddBorrowerRequestModelToBorrowerEntityModel implements Converter<AddBorrowerRequestModel, Borrower> {
+public class AddBorrowerRequestModelToBorrowerConvertor implements Converter<AddBorrowerRequestModel, Borrower> {
     @Override
     public Borrower convert(AddBorrowerRequestModel source) {
-        Borrower borrower =  new Borrower();
+        Borrower borrower = new Borrower();
         borrower.setFirstName(source.getFirstName());
         borrower.setLastName(source.getLastName());
         borrower.setDob(source.getDob());

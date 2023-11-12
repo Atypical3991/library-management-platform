@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BookIssuanceRepository extends JpaRepository<BookIssuance,Long> {
+public interface BookIssuanceRepository extends JpaRepository<BookIssuance, Long> {
     List<BookIssuance> findAllByStatus(BookIssuance.StatusEnum status);
 }

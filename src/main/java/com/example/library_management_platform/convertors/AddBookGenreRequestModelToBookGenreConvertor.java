@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class AddBookGenreRequestToBookGenreEntityModelConvertor implements Converter<AddBookGenreRequestModel, BookGenre> {
+public class AddBookGenreRequestModelToBookGenreConvertor implements Converter<AddBookGenreRequestModel, BookGenre> {
     @Override
     public BookGenre convert(AddBookGenreRequestModel source) {
-        BookGenre bookGenre =  new BookGenre();
+        BookGenre bookGenre = new BookGenre();
         bookGenre.setName(source.getGenre().toLowerCase());
         bookGenre.setSlug(StringUtil.convertToSlug(source.getGenre()));
         return bookGenre;

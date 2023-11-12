@@ -16,19 +16,19 @@ public class GetBorrowerDetailsResponseModel extends BaseResponseModel {
 
     public static class BorrowerDetails {
         @JsonProperty("email")
-        private String email;
+        private final String email;
 
         @JsonProperty("number")
-        private String number;
+        private final String number;
 
         @JsonProperty("username")
-        private String username;
+        private final String username;
 
         @JsonProperty("firstName")
-        private String firstName;
+        private final String firstName;
 
         @JsonProperty("lastName")
-        private String lastName;
+        private final String lastName;
 
 
         public BorrowerDetails(String email, String number, String username, String firstName, String lastName) {

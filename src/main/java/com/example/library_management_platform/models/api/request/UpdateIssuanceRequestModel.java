@@ -2,7 +2,6 @@ package com.example.library_management_platform.models.api.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -12,13 +11,14 @@ public class UpdateIssuanceRequestModel {
     private long issuanceId;
 
     @JsonProperty("status")
-    @Schema( allowableValues = "rejected, returned")
+    @Schema(allowableValues = "rejected, returned, delivered")
     private BookIssuanceStatusEnum status;
 
 
     public enum BookIssuanceStatusEnum {
         rejected,
-        returned
+        returned,
+        delivered
     }
 
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class BookIssuanceEntityModelToIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponseModel.AllIssuanceObj> {
+public class BookIssuanceToAllIssuanceObjConvertor implements Converter<BookIssuance, GetAllIssuanceResponseModel.AllIssuanceObj> {
 
     @Autowired
     BookRepository bookRepository;

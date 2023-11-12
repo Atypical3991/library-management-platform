@@ -14,6 +14,7 @@ public class GetLibraryManagerByIdResponseModel extends BaseResponseModel {
         this.data = data;
     }
 
+    @Data
     public static class LibraryManagerByIdDetailsData {
 
         @JsonProperty("username")

@@ -14,6 +14,7 @@ public class LoginResponseModelModel extends BaseResponseModel {
         this.data = data;
     }
 
+    @Data
     public static class LoginResponseDetailsData {
         @JsonProperty("token")
         private String token;

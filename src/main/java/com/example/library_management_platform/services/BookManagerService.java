@@ -1,6 +1,6 @@
 package com.example.library_management_platform.services;
 
-import com.example.library_management_platform.convertors.BookEntityModelToBookDetailsConvertor;
+import com.example.library_management_platform.convertors.BookToAllBookDetailsConvertor;
 import com.example.library_management_platform.models.api.request.AddBookRequestModel;
 import com.example.library_management_platform.models.api.response.GetAllBooksResponseModel;
 import com.example.library_management_platform.models.entities.Book;
@@ -11,35 +11,35 @@ import com.example.library_management_platform.services.interfaces.ItemManagerIn
 import com.example.library_management_platform.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
 
+//BookManagerService :- A service to manage Books
 @Service
 @Slf4j
-public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object,AddBookRequestModel,Object> {
+public class BookManagerService implements ItemManagerInterface<Long, GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails, Object, Object, AddBookRequestModel> {
 
     @Autowired
     BookRepository bookRepository;
 
     @Autowired
-    BookGenreRepository  bookGenreRepository;
+    BookGenreRepository bookGenreRepository;
 
     @Autowired
-    BookEntityModelToBookDetailsConvertor bookEntityModelToBookDetailsConvertor;
-
-
-    @Override
-    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Object searchRequestModel) {
-        return null;
-    }
+    BookToAllBookDetailsConvertor bookToAllBookDetailsConvertor;
 
     @Override
-    public List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItemsWithoutSearchCriteria() {
-        List<Book> bookList = bookRepository.findAll();
-        return bookList.stream().map(book -> bookEntityModelToBookDetailsConvertor.convert(book)).toList();
+    public Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> getAllItems(Pageable pageable) {
+        Page<Book> bookList = bookRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+        List<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> bookDetailsList = bookList.stream().map(book -> bookToAllBookDetailsConvertor.convert(book)).toList();
+        return new PageImpl<>(bookDetailsList, (org.springframework.data.domain.Pageable) pageable, bookDetailsList.size());
+
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
         book.setStatus(Book.StatusEnum.ACTIVE);
         book.setBookGenres(new HashSet<>(bookGenreList));
         bookRepository.save(book);
-        for(BookGenre genre : bookGenreList){
+        for (BookGenre genre : bookGenreList) {
             genre.getBooks().add(book);
             bookGenreRepository.save(genre);
         }
@@ -66,12 +66,19 @@ public class BookManagerService implements ItemManagerInterface<Long, GetAllBook
     }
 
     @Override
-    public Boolean removeItem(Long o) {
-        return null;
+    public Boolean removeItem(Long bookId) {
+        try {
+            bookRepository.deleteById(bookId);
+            return true;
+        } catch (Exception e) {
+            log.error("BookManagerService, removeItem exception raised!! bookId : {}", bookId, e);
+            return false;
+        }
+
     }
 
     @Override
-    public Boolean updateItem( Object itemModel, Long id) {
+    public Boolean updateItem(Object itemModel, Long id) {
         return null;
     }
 
