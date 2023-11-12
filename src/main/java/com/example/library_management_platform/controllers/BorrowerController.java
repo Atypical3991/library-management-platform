@@ -34,13 +34,11 @@ public class BorrowerController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllIssuanceResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> addBorrower(@RequestBody @Valid AddBorrowerRequestModel payload, @RequestHeader String Authorization) {
-        try {
-            borrowerManagerService.createUser(payload);
-            return ResponseEntity.ok().body(new BaseResponseModel(true, "", "Borrower added successfully."));
-        } catch (Exception e) {
-            log.error("BorrowerController, addBorrower exception raised!! payload : {}", payload, e);
+        Boolean success = borrowerManagerService.createUser(payload);
+        if (!success) {
             return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, "", "Borrower added successfully."));
     }
 
     //TODO: add support for deactivation and reactivation of borrowers by Id.
@@ -51,13 +49,9 @@ public class BorrowerController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetBorrowerDetailsResponseModel.class)))
     })
     public ResponseEntity<GetBorrowerDetailsResponseModel> getBorrower(@PathVariable long borrowerId, @RequestHeader String Authorization) {
-        try {
-            GetBorrowerDetailsResponseModel.BorrowerDetails borrowerDetailsResponseBorrowerDetails = borrowerManagerService.getUserById(borrowerId, Authorization);
-            return ResponseEntity.ok().body(new GetBorrowerDetailsResponseModel(true, null, "Borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails));
-        } catch (Exception e) {
-            log.error("BorrowerController, getBorrower exception raised!! borrowerId:{}", borrowerId, e);
-            return ResponseEntity.internalServerError().body(new GetBorrowerDetailsResponseModel(false, "Something went wrong.", null, null));
-        }
+
+        GetBorrowerDetailsResponseModel.BorrowerDetails borrowerDetailsResponseBorrowerDetails = borrowerManagerService.getUserById(borrowerId, Authorization);
+        return ResponseEntity.ok().body(new GetBorrowerDetailsResponseModel(true, null, "Borrower details fetched successfully,", borrowerDetailsResponseBorrowerDetails));
     }
 
 }
