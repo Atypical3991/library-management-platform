@@ -32,4 +32,4 @@ A basic library management platform backend, using Java's Springboot framework.
 
 # Flow diagram for Services with tables used:
 
-![](./libary maangement platform.png)
+![](https://github.com/Atypical3991/library-management-platform/blob/main/libary%20maangement%20platform.png)
