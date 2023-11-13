@@ -1,15 +1,19 @@
 package com.example.library_management_platform.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "book", uniqueConstraints = {
         @UniqueConstraint(columnNames = "slug")

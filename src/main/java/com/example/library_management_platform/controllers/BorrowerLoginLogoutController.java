@@ -33,18 +33,11 @@ public class BorrowerLoginLogoutController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
     })
     public ResponseEntity<LoginResponseModelModel> login(@RequestBody @Valid LoginRequestModel loginRequestModel) {
-        try {
-            String token = borrowerLoginLogoutService.login(loginRequestModel);
-            if (token == null) {
-                return ResponseEntity.internalServerError().body(new LoginResponseModelModel(false, "Token generation failed.", null, null));
-            }
-
-            return ResponseEntity.ok().body(new LoginResponseModelModel(false, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token)));
-
-        } catch (Exception e) {
-            log.error("BorrowerLoginLogoutController, login exception raised!! payload: {}", loginRequestModel, e);
-            return ResponseEntity.internalServerError().body(new LoginResponseModelModel(false, "Something went wrong.", null, null));
+        String token = borrowerLoginLogoutService.login(loginRequestModel);
+        if (token == null) {
+            return ResponseEntity.internalServerError().body(new LoginResponseModelModel(false, "Token generation failed.", null, null));
         }
+        return ResponseEntity.ok().body(new LoginResponseModelModel(false, null, "Logged-in successfully.", new LoginResponseModelModel.LoginResponseDetailsData(token)));
     }
 
     @PostMapping("/logout")
@@ -53,14 +46,12 @@ public class BorrowerLoginLogoutController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = LoginResponseModelModel.class)))
     })
     public ResponseEntity<BaseResponseModel> logout(@RequestHeader String Authorization) {
-        try {
-            // TODO: add validation on userID
-            sessionsRepository.deleteSessionsByToken(Authorization);
-            return ResponseEntity.ok().body(new BaseResponseModel(true, null, "logged out successfully"));
-        } catch (Exception e) {
-            log.error("LibraryManagerLoginLogoutController, logout exception raised!!", e);
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Oops!! something went wrong.", null));
+        // TODO: add validation on userID
+        int deleteResult = sessionsRepository.deleteSessionsByToken(Authorization);
+        if (deleteResult <= 0) {
+            return ResponseEntity.ok().body(new BaseResponseModel(true, "logged out failed", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "logged out successfully"));
     }
 
 

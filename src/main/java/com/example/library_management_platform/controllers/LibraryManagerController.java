@@ -28,14 +28,11 @@ public class LibraryManagerController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> createLibraryManager(@Valid @RequestBody AddLibraryManagerRequestModel payload, @RequestHeader(name = "x-admin-secret-key") String secretHeader) {
-        try {
-            libraryManagerService.createUser(payload);
-            return ResponseEntity.ok().body(new BaseResponseModel(true, "", "Library Manager added successfully."));
-        } catch (Exception e) {
-            log.error("LibraryManagerController, createLibraryManager exception raised!! payload : {}", payload, e);
+        Boolean success = libraryManagerService.createUser(payload);
+        if (!success) {
             return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
-
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, "", "Library Manager added successfully."));
     }
 
 
@@ -45,12 +42,8 @@ public class LibraryManagerController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetLibraryManagerByIdResponseModel.class)))
     })
     public ResponseEntity<GetLibraryManagerByIdResponseModel> getLibraryManager(@PathVariable long libraryManagerId, @RequestHeader String Authorization) {
-        try {
-            GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId, Authorization);
-            return ResponseEntity.ok().body(new GetLibraryManagerByIdResponseModel(true, null, "Library Manager's details fetched successfully,", libraryManagerByIdDetailsData));
-        } catch (Exception e) {
-            log.error("LibraryManagerController, getLibraryManager exception raised!! libraryManagerId:{}", libraryManagerId, e);
-            return ResponseEntity.internalServerError().body(new GetLibraryManagerByIdResponseModel(false, "Something went wrong.", null, null));
-        }
+        GetLibraryManagerByIdResponseModel.LibraryManagerByIdDetailsData libraryManagerByIdDetailsData = libraryManagerService.getUserById(libraryManagerId, Authorization);
+        return ResponseEntity.ok().body(new GetLibraryManagerByIdResponseModel(true, null, "Library Manager's details fetched successfully,", libraryManagerByIdDetailsData));
+
     }
 }

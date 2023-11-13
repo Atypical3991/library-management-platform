@@ -31,13 +31,11 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> addBook(@RequestBody @Valid AddBookRequestModel payload, @RequestHeader String Authorization) {
-        try {
-            Boolean success = bookManagerService.addItem(payload);
-            return ResponseEntity.ok().body(new BaseResponseModel(success, null, "Book added successfully"));
-        } catch (Exception e) {
-            log.error("BookController, addBook exception raised!! payload: {}", payload, e);
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong.", null));
+        Boolean success = bookManagerService.addItem(payload);
+        if (!success) {
+            return ResponseEntity.ok().body(new BaseResponseModel(false, "Something went wrong", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Book added successfully"));
     }
 
     @GetMapping("/all")
@@ -46,13 +44,8 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetAllBooksResponseModel.class)))
     })
     public ResponseEntity<Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails>> getAllBooks(Pageable pageable) {
-        try {
-            Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> allBookDetailsList = bookManagerService.getAllItems(pageable);
-            return ResponseEntity.ok().body(allBookDetailsList);
-        } catch (Exception e) {
-            log.error("BookController, getAllBooks exception raised!!", e);
-            return ResponseEntity.internalServerError().body(null);
-        }
+        Page<GetAllBooksResponseModel.AllBookDetailsData.AllBookDetails> allBookDetailsList = bookManagerService.getAllItems(pageable);
+        return ResponseEntity.ok().body(allBookDetailsList);
     }
 
     //TODO: add API for fetching single book details by Id
@@ -64,12 +57,10 @@ public class BookController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> removeBookById(@PathVariable long bookId, @RequestHeader String Authorization) {
-        try {
-            Boolean success = bookManagerService.removeItem(bookId);
-            return ResponseEntity.ok().body(new BaseResponseModel(success, "book removed successfully", null));
-        } catch (Exception e) {
-            log.error("BookController, removeBookById exception raised!! bookId : {} ", bookId, e);
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "something went wrong", null));
+        Boolean success = bookManagerService.removeItem(bookId);
+        if (!success) {
+            return ResponseEntity.ok().body(new BaseResponseModel(false, "Something went wrong", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "book removed successfully"));
     }
 }

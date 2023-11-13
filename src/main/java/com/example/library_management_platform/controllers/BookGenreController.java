@@ -30,17 +30,12 @@ public class BookGenreController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> addGenre(@RequestBody @Valid AddBookGenreRequestModel addBookGenreRequestModelPayload, @RequestHeader String Authorization) {
-        try {
-            Boolean success = bookGenreManagerService.addItem(addBookGenreRequestModelPayload);
-            if (success) {
-                return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Genre added successfully."));
-            } else {
-                return ResponseEntity.internalServerError().body(new BaseResponseModel(true, null, "Genre addition failed."));
-            }
-        } catch (Exception e) {
-            log.error("GenreController, addGenre exception raised!! payload : {}", addBookGenreRequestModelPayload, e);
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong", null));
+        Boolean success = bookGenreManagerService.addItem(addBookGenreRequestModelPayload);
+        if (!success) {
+            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Genre addition failed.", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Genre added successfully."));
+
     }
 
     @GetMapping("/{genreId}")
@@ -49,13 +44,8 @@ public class BookGenreController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = GetBookGenreByIdResponseModel.class)))
     })
     public ResponseEntity<GetBookGenreByIdResponseModel> getGenreByID(@PathVariable long genreId) {
-        try {
-            GetBookGenreByIdResponseModel.BookGenreByIdDetails bookGenreByIdDetails = bookGenreManagerService.getItemById(genreId);
-            return ResponseEntity.ok().body(new GetBookGenreByIdResponseModel(true, null, "Genre details fetched successfully.", new GetBookGenreByIdResponseModel.BookGenreByIdDetailsData(bookGenreByIdDetails)));
-        } catch (Exception e) {
-            log.error("GenreController, getGenreByID exception raised!! genreId : {}", genreId, e);
-            return ResponseEntity.internalServerError().body(new GetBookGenreByIdResponseModel(false, "Something went wrong", null, null));
-        }
+        GetBookGenreByIdResponseModel.BookGenreByIdDetails bookGenreByIdDetails = bookGenreManagerService.getItemById(genreId);
+        return ResponseEntity.ok().body(new GetBookGenreByIdResponseModel(true, null, "Genre details fetched successfully.", new GetBookGenreByIdResponseModel.BookGenreByIdDetailsData(bookGenreByIdDetails)));
     }
 
     @DeleteMapping("/delete/{genreId}")
@@ -64,13 +54,11 @@ public class BookGenreController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> removeGenreById(@PathVariable long genreId, @RequestHeader String Authorization) {
-        try {
-            Boolean success = bookGenreManagerService.removeItem(genreId);
-            return ResponseEntity.ok().body(new BaseResponseModel(success, "Genre removed successfully", null));
-        } catch (Exception e) {
-            log.error("GenreController, removeGenreById exception raised!! genreId: {}", genreId, e);
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong", null));
+        Boolean success = bookGenreManagerService.removeItem(genreId);
+        if (!success) {
+            return ResponseEntity.ok().body(new BaseResponseModel(false, "Genre removal failed", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Genre removed successfully"));
     }
 
     @PutMapping("/update/{genreId}")
@@ -79,12 +67,11 @@ public class BookGenreController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @Schema(implementation = BaseResponseModel.class)))
     })
     public ResponseEntity<BaseResponseModel> removeGenreById(@PathVariable long genreId, @RequestBody UpdateBookGenreRequestModel payload, @RequestHeader String Authorization) {
-        try {
-            Boolean success = bookGenreManagerService.updateItem(payload, genreId);
-            return ResponseEntity.ok().body(new BaseResponseModel(success, "Genre updated successfully", null));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new BaseResponseModel(false, "Something went wrong", null));
+        Boolean success = bookGenreManagerService.updateItem(payload, genreId);
+        if (!success) {
+            return ResponseEntity.ok().body(new BaseResponseModel(false, "Genre update failed", null));
         }
+        return ResponseEntity.ok().body(new BaseResponseModel(true, null, "Genre updated successfully"));
     }
 
 }
