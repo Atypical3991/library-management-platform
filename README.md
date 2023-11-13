@@ -29,6 +29,7 @@ A basic library management platform backend, using Java's Springboot framework.
 * Unit test cases
 * Integration test cases
 * End-to-End test cases
+* Use MD5 Hash while storing Password and Session Token into DB
 
 # Flow diagram for Services with tables used:
 
