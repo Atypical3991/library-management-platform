@@ -41,7 +41,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 "/api/genres/update/*",
                 "/api/issuance/update",
                 "/api/issuance/all",
-                "/api/borrowers",
                 "/api/library/managers/*",
                 "/api/library/membership",
                 "/api/library/membership/*"
