@@ -31,6 +31,6 @@ A basic library management platform backend, using Java's Springboot framework.
 * End-to-End test cases
 * Use MD5 Hash while storing Password and Session Token into DB
 
-# Flow diagram for Services with tables used:
+## Flow diagram for Services with tables used:
 
 ![](https://github.com/Atypical3991/library-management-platform/blob/main/libary%20maangement%20platform.png)
