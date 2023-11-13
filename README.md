@@ -1,7 +1,9 @@
+# What's it about?
 A basic library management platform backend, using Java's Springboot framework.  
 
 
-Features exposed:
+## Features exposed:
+
 * Create Borrower
 * Create Library Manager
 * Login & Logout with session storage for both Borrower and Library Manager
@@ -13,7 +15,8 @@ Features exposed:
 * Issue Books
 * Request/Approve/Reject Book Issuance
 
-SpringBoot Components used:
+## SpringBoot Components used:
+
 * REST Controllers
 * Interceptors
 * Global Exceptions handlers
@@ -22,7 +25,11 @@ SpringBoot Components used:
 * SpringBoot Convertors
 * JPA with annotations for table indices, constraints and relationships.
 
+#### TODOs
+* Unit test cases
+* Integration test cases
+* End-to-End test cases
 
-Flow diagram for Services with tables used:
+# Flow diagram for Services with tables used:
 
-![](C:\Users\bipla\Documents\my_projects\library-management-platform\libary maangement platform.png)
+![](./libary maangement platform.png)
